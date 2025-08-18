@@ -1,0 +1,12 @@
+#Git and IDE files
+.git
+.gitignore
+.idea/
+.vscode/
+*.iml
+
+#Maven build folder
+target/
+
+# Log files
+*.log
