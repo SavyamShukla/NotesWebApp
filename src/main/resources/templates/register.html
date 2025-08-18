@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
+<div class="register-container">
+    <div class="register-card">
+        <h2 class="title">Create Your Account</h2>
+
+        <!-- Step 1: Email + OTP -->
+        <div id="step-1" class="step active">
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <button type ="button"id="send-otp-btn" class="btn">Send OTP</button>
+
+            <div id="otp-section" class="hidden">
+                <input type="text" id="otp" placeholder="Enter OTP">
+                <button type="button" id="verify-otp-btn" class="btn">Verify OTP</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Registration Fields -->
+        <form id="step-2" class="step hidden">
+            <input type="hidden" name="email" id="verified-email">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <div class="password-field">
+                <input type="password" name="password" placeholder="Password" required>
+                <span class="toggle-password">&#128065;</span>
+            </div>
+            <div class="password-field">
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                <span class="toggle-password">&#128065;</span>
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="/login">Login</a></p>
+    </div>
+</div>
+
+<!-- Status Popup -->
+<div id="status-popup" class="status-popup hidden">
+    <div class="popup-content">
+        <div class="spinner"></div>
+        <p id="popup-text">Processing...</p>
+    </div>
+</div>
+
+<script src="/js/register.js"></script>
+</body>
+</html>

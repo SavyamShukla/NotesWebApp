@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Bin</title>
+    <link rel="stylesheet" href="/css/bin.css">
+</head>
+<body>
+<div class="bin-container">
+    <aside class="sidebar">
+        <ul>
+            <li onclick="loadDeleted('courses', this)">Courses</li>
+            <li onclick="loadDeleted('classes', this)">Classes</li>
+            <li onclick="loadDeleted('subjects', this)">Subjects</li>
+            <li onclick="loadDeleted('chapters', this)">Chapters</li>
+            <li onclick="loadDeleted('notes', this)">Notes</li>
+        </ul>
+    </aside>
+    <main class="main-content">
+        <h2 id="bin-title">Deleted Items</h2>
+        <div id="deleted-list"></div>
+    </main>
+</div>
+<script src="/js/bin.js"></script>
+</body>
+</html>

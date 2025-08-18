@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Existing Courses</title>
+    <link rel="stylesheet" href="/css/existing-course.css">
+</head>
+<body>
+<div class="container">
+    <h1>Manage Existing Courses</h1>
+
+    <!-- Search + Course List -->
+    <div class="courses-section">
+        <input type="text" id="searchBox" placeholder="Search courses..." onkeyup="filterCourses()">
+        <div id="courseList" class="course-list"></div>
+    </div>
+
+    <!-- Edit Section -->
+    <div class="edit-section" id="editSection">
+        <h2>Select a course to edit</h2>
+    </div>
+</div>
+
+<script src="/js/existing-course.js"></script>
+</body>
+</html>

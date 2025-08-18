@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+    <div th:if="${successMessage}" class="alert success">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="alert error">
+    <p th:text="${errorMessage}"></p>
+</div>
+<div class="login-container">
+    
+    <div class="login-card">
+        <h2 class="login-title">Welcome Back</h2>
+
+        <div class="toggle-buttons">
+            <button id="password-btn" class="toggle-btn active">Using Password</button>
+            <button id="otp-btn" class="toggle-btn">Using OTP</button>
+        </div>
+
+        <!-- Password Login -->
+        <form id="password-login" class="login-form" method="POST" action="/login-with-password">
+            <input type="email" name="email" placeholder="Email" required>
+            <div class="password-field">
+                <input type="password" name="password" placeholder="Password" required>
+                <span class="toggle-password">&#128065;</span>
+            </div>
+            <button type="submit" class="btn login-submit-btn">Login</button>
+            <button type="button" id="forgot-password" class="btn-text">Forgot Password?</button>
+        </form>
+
+        <!-- OTP Login -->
+        <form id="otp-login" class="login-form hidden" method="POST" action="/login-with-otp">
+            <input type="email" name="email" placeholder="Email" required>
+            <button type="button" id="send-otp" class="btn send-otp-btn">Send OTP</button>
+            <input type="text" name="otp" placeholder="Enter OTP" required>
+            <button type="submit" class="btn login-submit-btn">Login with OTP</button>
+        </form>
+    </div>
+    <p class="register-text">
+        New User? <a href="/register" class="register-link">Register!</a>
+    </p>
+</div>
+
+<!-- Forgot Password Modal -->
+<div id="forgot-modal" class="modal hidden">
+    <div class="modal-content">
+        <button id="back-btn" class="modal-btn">&#8592;</button>
+        <h3 class="modal-title">Reset Password</h3>
+        <form id="forgot-form" method="POST" action="/forgot-password/reset" class="forgot-form">
+            <input type="email" name="email" placeholder="Registered Email" required>
+            <button type="button" id="forgot-send-otp" class="btn send-otp-btn">Send OTP</button>
+            <input type="text" name="otp" placeholder="Enter OTP" required>
+            <div class="password-field">
+                <input type="password" name="newPassword" placeholder="New Password" required>
+                <span class="toggle-password">&#128065;</span>
+            </div>
+            <div class="password-field">
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                <span class="toggle-password">&#128065;</span>
+            </div>
+            <button type="submit" class="btn reset-password-btn">Reset Password</button>
+        </form>
+    </div>
+</div>
+
+<!-- Status Popup -->
+<div id="status-popup" class="status-popup hidden">
+    <div class="popup-content">
+        <div class="spinner"></div>
+        <p id="popup-text">Processing...</p>
+    </div>
+</div>
+
+<script src="/js/login.js"></script>
+</body>
+</html>

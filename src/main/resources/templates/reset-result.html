@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Result</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <style>
+        .result-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25),
+                        0 0 30px rgba(16, 185, 129, 0.15);
+            text-align: center;
+            color: #fff;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .result-message {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .login-link {
+            color: #10b981;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="result-card">
+            <h2>Password Reset</h2>
+            <p class="result-message" id="result-message">
+                <!-- Message will be inserted by controller -->
+            </p>
+            <p><a href="/login" class="login-link">Move to Login!</a></p>
+            <p>(You will be redirected automatically in 10 seconds.)</p>
+        </div>
+    </div>
+
+    <script>
+        // Display message from query parameter
+        const params = new URLSearchParams(window.location.search);
+        const message = params.get("message") || "Password reset complete!";
+        document.getElementById("result-message").innerText = message;
+
+        // Redirect to login after 10 seconds
+        setTimeout(() => {
+            window.location.href = "/login";
+        }, 10000);
+    </script>
+</body>
+</html>

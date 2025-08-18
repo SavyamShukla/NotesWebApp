@@ -1,0 +1,183 @@
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    color: #333;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #0f172a;
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #10b981;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.upper-links {
+    display: flex;
+    gap: 30px;
+}
+
+.upper-links a, .lower-link a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.upper-links a:hover, .lower-link a:hover {
+    color: #10b981;
+}
+
+.lower-link {
+    margin-top: 5px;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: default;
+    transition: transform 0.2s ease;
+}
+
+.profile-icon.active {
+    cursor: pointer;
+}
+
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-icon.active:hover {
+    transform: scale(1.1);
+} 
+
+
+.page-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    color: #0f172a;
+    font-size: 2rem;
+}
+
+/* Search bar */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto 40px auto;
+}
+
+.search-bar input {
+    width: 50%;
+    max-width: 400px;
+    padding: 10px 15px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: 10px;
+    border: 2px solid #c78181ad;
+    border-radius: 13px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-bar input:focus {
+    border-color: #10b981;
+    outline: none;
+}
+
+.courses-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Always 2 cards side by side */
+    gap: 20px;
+}
+
+.course-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+    min-height: 120px; /* Thinner cards */
+}
+
+.course-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.course-title {
+    margin-bottom: 8px;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+.course-description {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 10px;
+    min-height: 36px;
+}
+
+.btn-open {
+    display: inline-block;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.25);
+}
+
+.btn-open:hover {
+    background: linear-gradient(135deg, #34d399, #059669);
+    box-shadow: 0 5px 14px rgba(16, 185, 129, 0.4);
+    transform: translateY(-2px);
+}
+
+.course-card.no-course {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #6b7280;
+    font-style: italic;
+    text-align: center;
+    min-height: 100px;
+}
+
+
+
+
+
+
+
