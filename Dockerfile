@@ -1,6 +1,6 @@
 # --- Stage 1: Build the application ---
-# Use a Maven and Java 17 base image to build the project
-FROM maven:3.8.5-openjdk-21 AS build
+# Use a valid Maven and Java 21 base image
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -19,7 +19,7 @@ RUN mvn package -DskipTests
 
 
 # --- Stage 2: Create the final, smaller image ---
-# Use a minimal Java 17 runtime image
+# Use a matching Java 21 JRE runtime image
 FROM eclipse-temurin:21-jre-jammy
 
 # Set the working directory
