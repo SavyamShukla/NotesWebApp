@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
@@ -23,7 +23,7 @@
         </div>
     </nav>
 
-    <!-- Profile icon -->
+    <!-- Profile icon --
     <div class="profile-icon inactive" sec:authorize="!isAuthenticated()">
         <img src="/images/person-icon.png" alt="Profile">
     </div>
@@ -31,6 +31,83 @@
     <div class="profile-icon active" sec:authorize="isAuthenticated()" onclick="window.location.href='/dashboard'">
         <img src="/images/person-icon.png" alt="Profile">
     </div>
+</header>
+
+<section id="hero" class="hero">
+    <div class="hero-card">
+        <h1>Unlock Your Learning Potential</h1>
+        <p>Find notes, anytime, anywhere — crafted to help you succeed.</p>
+        <a href="/courses-page" class="btn-primary">Get Notes</a>
+    </div>
+</section>
+
+<section id="motive" class="motive">
+    <h2>Why Choose NotesPortal?</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Quality Content</h3>
+            <p>Our notes are carefully curated to meet your academic needs.</p>
+        </div>
+        <div class="card">
+            <h3>Easy Access</h3>
+            <p>One-click access to all your purchased and free notes.</p>
+        </div>
+        <div class="card">
+            <h3>Affordable</h3>
+            <p>Learn without financial stress, with notes priced for everyone.</p>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="contact">
+    <h2>Get in Touch</h2>
+    <p>Email: <a href="mailto:notesportal.wb@gmail.com">support@notesportal.com</a></p>
+    <p>Phone: +91-808106####</p>
+    <p>Follow us:
+        <a href="#">Instagram</a> | <a href="#">Twitter</a>
+    </p>
+</section>
+
+<footer class="footer">
+    &copy; 2025 NotesPortal. All rights reserved.
+</footer>
+
+<script src="/js/index.js"></script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotesPortal - Your Smart Study Companion</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="/" class="logo">NotesPortal</a>
+    
+    <ul class="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#motive">Our Motive</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li sec:authorize="!isAuthenticated()"><a href="/login" class="btn-login">Login</a></li>
+        <li sec:authorize="isAuthenticated()"><a href="/logout" class="btn-logout">Logout</a></li>
+        <li sec:authorize="isAuthenticated()" class="profile-link-li">
+            <a href="/dashboard" class="profile-link">
+                <img src="/images/person-icon.png" alt="Profile">
+            </a>
+        </li>
+    </ul>
+
+    <div class="profile-icon-placeholder" sec:authorize="!isAuthenticated()">
+        <img src="/images/person-icon.png" alt="Profile">
+    </div>
+
+    <button class="hamburger">☰</button>
 </header>
 
 <section id="hero" class="hero">
