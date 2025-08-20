@@ -42,7 +42,7 @@
             <p class="purchase-date">
                 Purchased on: <span th:text="${#temporals.format(purchase.purchasedAt, 'dd-MM-yyyy HH:mm')}"></span>
             </p>
-            <a th:href="/notesDemo" class="btn-open unlocked">Download</a>
+            <a th:href="@{'/notesDemo'}" class="btn-open unlocked">Download</a>
         </div>
     </div>
 </main>
