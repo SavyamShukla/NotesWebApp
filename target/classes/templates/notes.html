@@ -49,7 +49,7 @@
             <div class="note-actions">
                 <div sec:authorize="isAuthenticated()">
                     <div th:if="${note.free} or ${userHasNote.get(note.id)}">
-                         <a th:href="@{'/uploads/' + ${note.fileUrl}}"
+                         <a th:href="/notesDemo"
                             class="btn-open unlocked">Download</a>
                     </div>
 
