@@ -15,4 +15,9 @@ public class PageController {
         return "bin";
     }
 
+    @GetMapping("/notesDemo")
+    public String notedemopage(){
+        return "notedemo";
+    }
+
 }

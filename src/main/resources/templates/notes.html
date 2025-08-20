@@ -61,9 +61,9 @@
                         </button>
                     </form>
                 </div>
-
+  <!--"@{'/uploads/' + ${note.fileUrl}}"-->
                 <div sec:authorize="!isAuthenticated()">
-                    <a th:if="${note.free}" th:href="@{'/uploads/' + ${note.fileUrl}}"
+                    <a th:if="${note.free}" th:href="/notesDemo"
                        class="btn-open unlocked">Download</a>
                     
                     <a th:unless="${note.free}" href="/login"
