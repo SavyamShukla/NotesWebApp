@@ -11,14 +11,22 @@ public class Course {
     private boolean deleted = false;
     private String name;
     private String description;
-    @OneToMany(mappedBy = "course", cascade= CascadeType.ALL, orphanRemoval = true)
+   /*  @OneToMany(mappedBy = "course", cascade= CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Subject> subjects;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ClassEntity> classes;
+    private List<ClassEntity> classes;*/
+ 
 
+    @OneToMany(mappedBy = "course", cascade= CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("course-subject")
+    private List<Subject> subjects;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("course-classes")
+    private List<ClassEntity> classes;
 
 
     // Getters and Setters

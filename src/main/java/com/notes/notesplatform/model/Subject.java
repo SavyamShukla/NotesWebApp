@@ -16,16 +16,16 @@ public class Subject {
 
     @ManyToOne
     @JoinColumn(name = "class_id", nullable= true)
-    @JsonBackReference
+    @JsonBackReference("class-subject")
     private ClassEntity classEntity;
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable= false)
-    @JsonBackReference
+    @JsonBackReference("course-subject")
     private Course course;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("subject-chapter")
     private List<Chapter> chapters;
 
     // Getters and Setters

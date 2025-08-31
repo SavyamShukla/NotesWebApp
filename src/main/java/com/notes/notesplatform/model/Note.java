@@ -15,7 +15,7 @@ public class Note {
 
     @ManyToOne
     @JoinColumn(name = "chapter_id")
-    @JsonBackReference
+    @JsonBackReference("chapter-note")
     private Chapter chapter;
 
     // Getters and Setters

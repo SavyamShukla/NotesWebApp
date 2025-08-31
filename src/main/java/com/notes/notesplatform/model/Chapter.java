@@ -14,11 +14,11 @@ public class Chapter {
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
-    @JsonBackReference
+    @JsonBackReference("subject-chapter")
     private Subject subject;
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("chapter-note")
     private List<Note> notes;
 
     // Getters and Setters

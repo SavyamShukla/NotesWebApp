@@ -14,11 +14,11 @@ public class ClassEntity {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    @JsonBackReference
+    @JsonBackReference("course-classes")
     private Course course;
 
     @OneToMany(mappedBy = "classEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("class-subject")
     private List<Subject> subjects;
 
     // Getters and Setters
