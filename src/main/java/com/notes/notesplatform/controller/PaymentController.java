@@ -260,9 +260,16 @@ public class PaymentController {
         // FINAL FIX: This robustly handles cases where the noteId might arrive as a decimal (e.g., 5.0) 
         // or a whole number (e.g., 5). We convert it to a String, parse it as a Double to accommodate
         // decimals, and then take its long value to safely truncate it to a whole number.
-        String noteIdStr = String.valueOf(payload.get("noteId"));
-        Double noteIdDouble = Double.parseDouble(noteIdStr);
-        Long noteId = noteIdDouble.longValue();
+        //String noteIdStr = String.valueOf(payload.get("noteId"));
+        //Double noteIdDouble = Double.parseDouble(noteIdStr);
+        //Long noteId = noteIdDouble.longValue();
+
+        Object noteIdObj = payload.get("noteId");
+    if (!(noteIdObj instanceof Number)) {
+        throw new IllegalArgumentException("Note ID must be a number.");
+    }
+    Long noteId = ((Number) noteIdObj).longValue();
+
 
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Note ID: " + noteId));
