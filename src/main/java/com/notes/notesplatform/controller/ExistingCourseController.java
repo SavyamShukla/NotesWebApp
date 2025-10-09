@@ -159,9 +159,13 @@ public class ExistingCourseController {
                     if (payload.containsKey("fileUrl")) {
                         note.setFileUrl((String) payload.get("fileUrl"));
                     }
-                    if (payload.containsKey("price")) {
+                   /*  if (payload.containsKey("price")) {
                         note.setPrice(Double.parseDouble(payload.get("price").toString()));
-                    }
+                    }*/
+                    if (payload.containsKey("price")) {
+                    // Create a BigDecimal directly from the String
+                    note.setPrice(new java.math.BigDecimal(payload.get("price").toString()));
+                }
                     if (payload.containsKey("isFree")) {
                         note.setFree((Boolean) payload.get("isFree"));
                     }
