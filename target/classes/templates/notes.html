@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
@@ -61,7 +61,7 @@
                         </button>
                     </form>
                 </div>
-  <!--"@{'/uploads/' + ${note.fileUrl}}"-->
+  <--"@{'/uploads/' + ${note.fileUrl}}"--
                 <div sec:authorize="!isAuthenticated()">
                     <a th:if="${note.free}" th:href="@{'/notesDemo'}"
                        class="btn-open unlocked">Download</a>
@@ -75,6 +75,204 @@
 </main>
 
 <script>
+    function filterNotes() {
+        const input = document.getElementById("search-input").value.toLowerCase();
+        const cards = document.querySelectorAll(".chapter-card");
+        cards.forEach(card => {
+            const title = card.querySelector(".chapter-title").textContent.toLowerCase();
+            card.style.display = title.includes(input) ? "" : "none";
+        });
+    }
+</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes - NotesPortal</title>
+    <link rel="stylesheet" href="/css/chapters.css">
+    <!-- 1. Add Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<header class="navbar" th:replace="~{fragments/header :: header}"></header>
+
+<main class="chapters-container">
+    <h1 class="page-title">Notes</h1>
+
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search notes..." onkeyup="filterNotes()">
+    </div>
+
+    <!-- Container for notifications/alerts -->
+    <div id="alert-container" style="position: fixed; top: 80px; right: 20px; z-index: 1050;"></div>
+
+    <div class="chapters-grid">
+        <div th:if="${#lists.isEmpty(notes)}" class="chapter-card no-chapter">
+            <p>No Notes Available</p>
+        </div>
+
+        <div th:each="note : ${notes}" class="chapter-card">
+            <h2 class="chapter-title" th:text="${note.title}">Note Title</h2>
+
+            <div class="note-actions">
+                <div sec:authorize="isAuthenticated()">
+                    <!-- If note is free OR user has already purchased it, show Download button -->
+                    <div th:if="${note.free} or ${userHasNote.get(note.id)}">
+                         <a th:href="@{'/notesDemo'}"
+                           class="btn-open unlocked">Download</a>
+                    </div>
+
+                    <!-- If note is NOT free AND user has NOT purchased it, show Pay button -->
+                    <div th:if="${!note.free} and !${userHasNote.get(note.id)}">
+                        <!-- 2. Modified Button: It's no longer a form submit, but a button that calls a JS function -->
+                        <button type="button" class="btn-open pay-button"
+                                th:attr="data-note-id=${note.id}, data-price=${note.price}, data-note-title=${note.title}"
+                                onclick="payForNote(this)">
+                            Pay ₹<span th:text="${note.price}"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:if="${note.free}" th:href="@{'/notesDemo'}"
+                       class="btn-open unlocked">Download</a>
+
+                    <a th:unless="${note.free}" href="/login"
+                       class="btn-open locked disabled">Login to Buy 🔒</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- 3. Add JavaScript for payment flow -->
+<script th:inline="javascript">
+    /* Get user details from Spring Security Principal for pre-filling Razorpay form */
+    const currentUser = {
+        name: '[[${#authentication.principal?.username}]]', // Or use a field like 'fullName' if available
+        email: '[[${#authentication.principal?.username}]]'
+    };
+
+    // Get the Razorpay Key ID from the server (passed via model or directly here)
+    // Note: It's generally safe to expose the Key ID on the client side. The Key Secret must remain on the server.
+    const RAZORPAY_KEY_ID = /*[[${@environment.getProperty('razorpay.key.id')}]]*/ 'YOUR_KEY_ID';
+
+    async function payForNote(button) {
+        const noteId = button.getAttribute('data-note-id');
+        const price = button.getAttribute('data-price');
+        const noteTitle = button.getAttribute('data-note-title');
+        console.log("Starting payment for Note ID:", noteId);
+
+        // Step 1: Call our backend to create a Razorpay order
+        const response = await fetch('/payment/create_order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Include CSRF token if Spring Security CSRF is enabled
+                '[[${_csrf.headerName}]]': '[[${_csrf.token}]]'
+            },
+            body: JSON.stringify({ noteId: noteId })
+        });
+
+        if (!response.ok) {
+            showAlert('Could not create payment order. Please try again.', 'error');
+            return;
+        }
+
+        const orderData = await response.json();
+        console.log("Order created:", orderData);
+
+        // Step 2: Configure and open the Razorpay Checkout modal
+        const options = {
+            key: RAZORPAY_KEY_ID,
+            amount: orderData.amount, // Amount in the smallest currency unit (paise)
+            currency: "INR",
+            name: "NotesPortal",
+            description: "Purchase: " + noteTitle,
+            order_id: orderData.id,
+            // This function is called after payment is successful
+            handler: async function (response) {
+                console.log("Payment successful:", response);
+                // Step 3: Call our backend to verify the payment signature
+                const verificationResponse = await fetch('/payment/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        '[[${_csrf.headerName}]]': '[[${_csrf.token}]]'
+                    },
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_signature: response.razorpay_signature,
+                        noteId: noteId
+                    })
+                });
+
+                const verificationResult = await verificationResponse.json();
+                if (verificationResult.status === 'success') {
+                    showAlert('Payment successful! You can now download the note.', 'success');
+                    // Reload the page after a short delay to show the "Download" button
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    showAlert('Payment verification failed. Please contact support.', 'error');
+                }
+            },
+            prefill: {
+                name: currentUser.name,
+                email: currentUser.email
+            },
+            theme: {
+                color: "#3399cc"
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.on('payment.failed', function (response) {
+            console.error("Payment failed:", response);
+            showAlert('Payment failed: ' + response.error.description, 'error');
+        });
+
+        rzp.open();
+    }
+
+    // Helper function to show alerts to the user
+    function showAlert(message, type = 'info') {
+        const alertContainer = document.getElementById('alert-container');
+        const alertDiv = document.createElement('div');
+        alertDiv.style.padding = '15px';
+        alertDiv.style.marginBottom = '10px';
+        alertDiv.style.borderRadius = '5px';
+        alertDiv.style.color = 'white';
+        alertDiv.style.minWidth = '250px';
+        alertDiv.style.opacity = '0.9';
+        
+        alertDiv.textContent = message;
+
+        if (type === 'success') {
+            alertDiv.style.backgroundColor = '#28a745';
+        } else if (type === 'error') {
+            alertDiv.style.backgroundColor = '#dc3545';
+        } else {
+            alertDiv.style.backgroundColor = '#17a2b8';
+        }
+
+        alertContainer.appendChild(alertDiv);
+
+        // Automatically remove the alert after 5 seconds
+        setTimeout(() => {
+            alertDiv.style.transition = 'opacity 0.5s';
+            alertDiv.style.opacity = '0';
+            setTimeout(() => alertDiv.remove(), 500);
+        }, 5000);
+    }
+
     function filterNotes() {
         const input = document.getElementById("search-input").value.toLowerCase();
         const cards = document.querySelectorAll(".chapter-card");
