@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -144,7 +145,7 @@ public String createCourse(@ModelAttribute Course course) {
     public String addNote(@RequestParam Long chapterId,
                           @RequestParam String title,
                           @RequestParam String fileUrl,
-                          @RequestParam double price,
+                          @RequestParam BigDecimal price,
                           @RequestParam(defaultValue = "false") boolean isFree) {
         Chapter chapter = chapterRepository.findById(chapterId)
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
