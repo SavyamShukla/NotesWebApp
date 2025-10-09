@@ -178,8 +178,8 @@
 <script th:inline="javascript">
     /* Get user details from Spring Security Principal for pre-filling Razorpay form */
     const currentUser = {
-        name: '[[${#authentication.principal?.username}]]', // Or use a field like 'fullName' if available
-        email: '[[${#authentication.principal?.username}]]'
+        name: '[[${#authentication.principal}]]', // Or use a field like 'fullName' if available
+        email: '[[${#authentication.principal}]]'
     };
 
     // Get the Razorpay Key ID from the server (passed via model or directly here)
