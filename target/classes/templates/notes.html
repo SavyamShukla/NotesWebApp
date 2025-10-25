@@ -190,9 +190,7 @@
       const RAZORPAY_KEY_ID = '[[${razorpayKey}]]';
 
 
-      const csrfHeader = /*[[${_csrf.headerName}]]*/ null;
-    const csrfToken = /*[[${_csrf.token}]]*/ null;
-
+      
     async function payForNote(button) {
         const noteId = button.getAttribute('data-note-id');
         const price = button.getAttribute('data-price');
