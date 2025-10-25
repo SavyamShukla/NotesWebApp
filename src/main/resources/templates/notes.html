@@ -368,8 +368,8 @@
     const RAZORPAY_KEY_ID = '[[${razorpayKey}]]'; 
     
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
-    const csrfHeader = /*[[${_csrf?.headerName}]]*/ null;
-    const csrfToken = /*[[${_csrf?.token}]]*/ null;
+    const csrfHeader = '[[${_csrf?.headerName}]]';
+    const csrfToken = '[[${_csrf?.token}]]';
 
     async function payForNote(button) {
         const noteId = button.getAttribute('data-note-id');
