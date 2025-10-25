@@ -189,6 +189,10 @@
     // This now reads the simple "razorpayKey" variable from the model
       const RAZORPAY_KEY_ID = '[[${razorpayKey}]]';
 
+
+      const csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+    const csrfToken = /*[[${_csrf.token}]]*/ null;
+
     async function payForNote(button) {
         const noteId = button.getAttribute('data-note-id');
         const price = button.getAttribute('data-price');
@@ -196,13 +200,29 @@
         console.log("Starting payment for Note ID:", noteId);
 
         // Step 1: Call our backend to create a Razorpay order
-        const response = await fetch('/payment/create_order', {
+        /*const response = await fetch('/payment/create_order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 // Include CSRF token if Spring Security CSRF is enabled
                 '[[${_csrf.headerName}]]': '[[${_csrf.token}]]'
             },
+            body: JSON.stringify({ noteId: noteId })
+        });*/
+
+        // Step 1: Call our backend to create a Razorpay order
+
+        // Build headers dynamically
+        const createOrderHeaders = {
+            'Content-Type': 'application/json'
+        };
+        if (csrfHeader && csrfToken) {
+            createOrderHeaders[csrfHeader] = csrfToken;
+        }
+
+        const response = await fetch('/payment/create_order', {
+            method: 'POST',
+            headers: createOrderHeaders, // Use the new headers object
             body: JSON.stringify({ noteId: noteId })
         });
 
@@ -223,7 +243,7 @@
             description: "Purchase: " + noteTitle,
             order_id: orderData.id,
             // This function is called after payment is successful
-            handler: async function (response) {
+           /* handler: async function (response) {
                 console.log("Payment successful:", response);
                 // Step 3: Call our backend to verify the payment signature
                 const verificationResponse = await fetch('/payment/verify', {
@@ -248,6 +268,35 @@
                 } else {
                     showAlert('Payment verification failed. Please contact support.', 'error');
                 }
+            },*/
+            // Step 1: Call our backend to create a Razorpay order
+
+        // Build headers dynamically
+        handler: async function (response) {
+                console.log("Payment successful:", response);
+
+                // Build verification headers dynamically
+                const verifyHeaders = {
+                    'Content-Type': 'application/json'
+                };
+                if (csrfHeader && csrfToken) {
+                    verifyHeaders[csrfHeader] = csrfToken;
+                }
+
+                // Step 3: Call our backend to verify the payment signature
+                const verificationResponse = await fetch('/payment/verify', {
+                    method: 'POST',
+                    headers: verifyHeaders, // Use the new headers object
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_signature: response.razorpay_signature,
+                        noteId: noteId
+                    })
+                });
+                
+                const verificationResult = await verificationResponse.json();
+                // ... (rest of the handler function is fine)
             },
             prefill: {
                 name: currentUser.name,
