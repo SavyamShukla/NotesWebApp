@@ -2,6 +2,7 @@ package com.notes.notesplatform.controller;
 
 import com.notes.notesplatform.model.Note;
 import com.notes.notesplatform.model.PurchasedNote;
+import org.springframework.beans.factory.annotation.Value;
 import com.notes.notesplatform.model.User;
 import com.notes.notesplatform.repository.NoteRepository;
 import com.notes.notesplatform.repository.PurchasedNoteRepository;
@@ -23,6 +24,9 @@ import java.util.Map;
 
 @Controller
 public class NotesPageController {
+
+    @Value("${razorpay.key.id}")
+    private String razorpayKeyId;
 
     @Autowired
     private NoteRepository noteRepository;

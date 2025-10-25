@@ -184,7 +184,10 @@
 
     // Get the Razorpay Key ID from the server (passed via model or directly here)
     // Note: It's generally safe to expose the Key ID on the client side. The Key Secret must remain on the server.
-    const RAZORPAY_KEY_ID = /*[[${@environment.getProperty('razorpay.key.id')}]]*/ razorpay.key.id;
+    //const RAZORPAY_KEY_ID = /*[[${@environment.getProperty('razorpay.key.id')}]]*/ razorpay.key.id;
+    //const RAZORPAY_KEY_ID = [[${@environment.getProperty('razorpay.key.id')}]];
+    // This now reads the simple "razorpayKey" variable from the model
+      const RAZORPAY_KEY_ID = '[[${razorpayKey}]]';
 
     async function payForNote(button) {
         const noteId = button.getAttribute('data-note-id');
