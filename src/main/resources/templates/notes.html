@@ -188,8 +188,7 @@
     const RAZORPAY_KEY_ID = '[[${razorpayKey}]]'; 
     
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
-    const csrfHeader = '[[${_csrf?.headerName}]]';
-    const csrfToken = '[[${_csrf?.token}]]';
+
 
     async function payForNote(button) {
         const noteId = button.getAttribute('data-note-id');
@@ -203,10 +202,7 @@
         const createOrderHeaders = {
             'Content-Type': 'application/json'
         };
-        // This 'if' block prevents the _csrf crash
-        if (csrfHeader && csrfToken) {
-            createOrderHeaders[csrfHeader] = csrfToken;
-        }
+       
 
         const response = await fetch('/payment/create_order', {
             method: 'POST',
@@ -238,10 +234,7 @@
                 const verifyHeaders = {
                     'Content-Type': 'application/json'
                 };
-                // This 'if' block prevents the _csrf crash
-                if (csrfHeader && csrfToken) {
-                    verifyHeaders[csrfHeader] = csrfToken;
-                }
+               
 
                 // Step 3: Call our backend to verify the payment signature
                 const verificationResponse = await fetch('/payment/verify', {
