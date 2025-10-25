@@ -179,8 +179,8 @@
 <script th:inline="javascript">
     /* Get user details safely (using username) */
    const currentUser = {
-    name: '[[${#authentication != null ? #authentication.principal?.username : ""}]]',
-    email: '[[${#authentication != null ? #authentication.principal?.username : ""}]]'
+    name: '[[${#authentication != null ? (#authentication.principal instanceof T(java.lang.String) ? #authentication.principal : #authentication.principal?.username) : ""}]]',
+    email: '[[${#authentication != null ? (#authentication.principal instanceof T(java.lang.String) ? #authentication.principal : #authentication.principal?.username) : ""}]]'
 };
 
     /* Get Razorpay Key from the model (as set in your Controller) */
