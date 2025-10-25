@@ -28,6 +28,8 @@ public class NotesPageController {
     @Value("${razorpay.key.id}")
     private String razorpayKeyId;
 
+
+
     @Autowired
     private NoteRepository noteRepository;
 
@@ -62,6 +64,7 @@ public String showNotes(@RequestParam(required = false) Long chapterId,
 
     model.addAttribute("notes", notes);
     model.addAttribute("userHasNote", userHasNote);
+    model.addAttribute("razorpayKey", razorpayKeyId);
     return "notes";
 }
 
