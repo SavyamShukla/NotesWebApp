@@ -311,6 +311,7 @@ public class PaymentController {
                     purchase.setPurchasedAt(LocalDateTime.now());
                     purchase.setRazorpayPaymentId(paymentId);
                     purchase.setRazorpayOrderId(orderId);
+                    purchase.setPurchased(true);
                     purchasedNoteRepository.save(purchase);
                 }
                 return ResponseEntity.ok().body(Map.of("status", "success", "message", "Payment verified and note purchased."));

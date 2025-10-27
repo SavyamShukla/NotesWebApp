@@ -137,6 +137,9 @@ public class PurchasedNote {
     @Column(name = "razorpay_order_id")
     private String razorpayOrderId;
 
+    @Column(name = "purchased")
+    private boolean purchased;
+
 
     // --- Getters and Setters ---
 
@@ -188,5 +191,13 @@ public class PurchasedNote {
     // Fully implemented setter
     public void setRazorpayOrderId(String razorpayOrderId) {
         this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public boolean isPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        this.purchased = purchased;
     }
 }
