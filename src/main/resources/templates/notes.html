@@ -99,7 +99,8 @@
 
     /* Get Razorpay Key from the model (as set in your Controller) */
     /* THIS WILL FAIL if you did not add "razorpayKey" to the model in your Java Controller */
-    const RAZORPAY_KEY_ID = '[[${razorpay.key.id}]]'; 
+    const razorpayKey = /*[[${razorpayKeyId}]]*/ "";
+
     
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
     console.log("✅ Notes page script loaded");
