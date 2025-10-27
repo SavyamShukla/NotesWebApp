@@ -102,7 +102,7 @@
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
 
 
-    async function payForNote(button) {
+    window.payForNote = async function(button) {
         const noteId = Number(button.getAttribute('data-note-id'));
         const price = button.getAttribute('data-price');
         const noteTitle = button.getAttribute('data-note-title');
