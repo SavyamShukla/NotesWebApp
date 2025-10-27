@@ -98,7 +98,7 @@
 
     /* Get Razorpay Key from the model (as set in your Controller) */
     /* THIS WILL FAIL if you did not add "razorpayKey" to the model in your Java Controller */
-    const razorpayKey = '[[${razorpaykey}]]';
+    const razorpaykey = '[[${razorpaykey}]]';
 
     
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
@@ -136,7 +136,7 @@
 
         // Step 2: Configure and open the Razorpay Checkout modal
         const options = {
-            key: razorpayKey,
+            key: razorpaykey,
             amount: orderData.amount, // Amount in the smallest currency unit (paise)
             currency: "INR",
             name: "NotesPortal",
