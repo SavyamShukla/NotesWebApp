@@ -90,8 +90,7 @@
    
 <script th:inline="javascript">
     /* Get user details safely (using username) */
-    console.log("✅ Notes page script loaded");
-
+   
    const currentUser = {
     name: '[[${#authentication != null ? (#authentication.principal instanceof T(java.lang.String) ? #authentication.principal : #authentication.principal?.username) : ""}]]',
     email: '[[${#authentication != null ? (#authentication.principal instanceof T(java.lang.String) ? #authentication.principal : #authentication.principal?.username) : ""}]]'
@@ -99,15 +98,14 @@
 
     /* Get Razorpay Key from the model (as set in your Controller) */
     /* THIS WILL FAIL if you did not add "razorpayKey" to the model in your Java Controller */
-    const razorpayKey = /*[[${razorpayKeyId}]]*/ "";
+    const razorpayKey = '[[${razorpayKeyId}]]';
 
     
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
-    console.log("✅ Notes page script loaded");
-
+    
 
     window.payForNote = async function(button) {
-        console.log("✅ Notes page script loaded");
+       
 
         const noteId = Number(button.getAttribute('data-note-id'));
         const price = button.getAttribute('data-price');
