@@ -136,7 +136,7 @@
 
         // Step 2: Configure and open the Razorpay Checkout modal
         const options = {
-            key: RAZORPAY_KEY_ID,
+            key: razorpayKey,
             amount: orderData.amount, // Amount in the smallest currency unit (paise)
             currency: "INR",
             name: "NotesPortal",
