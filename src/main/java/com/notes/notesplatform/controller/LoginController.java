@@ -80,7 +80,7 @@ public class LoginController {
         otpService.generateOtp(email);
         model.addAttribute("message", "OTP has been sent to your email.");
         model.addAttribute("email", email);
-        model.addAttribute("useOtp", true); // automatically enable OTP mode
+        model.addAttribute("useOtp", true); 
         return "login";
     }
 
@@ -117,17 +117,17 @@ public class LoginController {
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
         );
 
-        // Create new security context
+        
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
-        // Store context in session so login persists across requests
+        
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", context);
     }
 
-    // Forgot password methods stay the same...
+    
      @PostMapping("/forgot-password/send-otp")
 public String sendForgotPasswordOtp(@RequestParam("email") String email, Model model) {
     Optional<User> userOpt = userRepository.findByEmail(email);
@@ -150,14 +150,14 @@ public String resetPassword(@RequestParam("email") String email,
                             @RequestParam("newPassword") String newPassword,
                             Model model) {
 
-    // Check OTP validity
+    
     if (!otpService.validateOtp(email, otp)) {
         String message = "Invalid or expired OTP for " + email + ". Please try again.";
         return "redirect:/reset-result?success=false&message=" + 
                URLEncoder.encode(message, StandardCharsets.UTF_8);
     }
 
-    // Find user by email
+    
     Optional<User> userOpt = userRepository.findByEmail(email);
     if (userOpt.isEmpty()) {
         String message = "User with email " + email + " not found.";
@@ -165,7 +165,7 @@ public String resetPassword(@RequestParam("email") String email,
                URLEncoder.encode(message, StandardCharsets.UTF_8);
     }
 
-    // Update password
+    
     User user = userOpt.get();
     user.setPassword(passwordEncoder.encode(newPassword));
     userRepository.save(user);

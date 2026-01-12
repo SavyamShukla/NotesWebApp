@@ -30,13 +30,13 @@ import com.notes.notesplatform.model.User;
 
 public interface PurchasedNoteRepository extends JpaRepository<PurchasedNote, Long> {
 
-    // Old method - This is the one causing the N+1 issue if used on the dashboard
+    
     List<PurchasedNote> findByUser(User user);
     
-    // New, optimized method to solve the N+1 problem
+    
     @Query("SELECT pn FROM PurchasedNote pn JOIN FETCH pn.note WHERE pn.user = :user")
     List<PurchasedNote> findByUserWithNotes(@Param("user") User user);
     
-    // This method is also a source of N+1 on the notes page, as discussed previously
+    
     boolean existsByUserAndNote(User user, Note note);
 }

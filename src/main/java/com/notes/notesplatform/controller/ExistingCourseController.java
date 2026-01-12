@@ -63,7 +63,7 @@ public class ExistingCourseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // ---- Soft delete endpoints ----
+    // Soft delete endpoints 
 
     @PostMapping("/soft-delete-course/{id}")
     @ResponseBody
@@ -125,7 +125,7 @@ public class ExistingCourseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // ---- New endpoints for hierarchy ----
+    
 
     @GetMapping("/{courseId}/classes")
     @ResponseBody
@@ -159,11 +159,9 @@ public class ExistingCourseController {
                     if (payload.containsKey("fileUrl")) {
                         note.setFileUrl((String) payload.get("fileUrl"));
                     }
-                   /*  if (payload.containsKey("price")) {
-                        note.setPrice(Double.parseDouble(payload.get("price").toString()));
-                    }*/
+                   
                     if (payload.containsKey("price")) {
-                    // Create a BigDecimal directly from the String
+                    
                     note.setPrice(new java.math.BigDecimal(payload.get("price").toString()));
                 }
                     if (payload.containsKey("isFree")) {

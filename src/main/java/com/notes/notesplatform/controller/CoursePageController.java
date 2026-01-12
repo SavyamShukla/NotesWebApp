@@ -27,7 +27,7 @@ public class CoursePageController {
     public String showCourses(Model model) {
         List<Course> courses = CourseRepository.findByDeletedFalse();
         model.addAttribute("courses", courses);
-        return "courses"; // Looks for courses.html in templates folder
+        return "courses"; 
     }
 
     @GetMapping("/courses/{courseId}/has-classes")

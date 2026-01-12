@@ -28,7 +28,7 @@ public class BinController {
     private NoteRepository noteRepository;
 
     
-    // ====== Fetch Deleted ======
+    
     @GetMapping("/courses")
     public List<Map<String, Object>> getDeletedCourses() {
         List<Course> deleted = courseRepository.findByDeletedTrue();
@@ -124,7 +124,7 @@ public class BinController {
         }).toList();
     }
 
-    // ====== Restore ======
+    
     @PutMapping("/restore/{type}/{id}")
     public ResponseEntity<String> restoreEntity(@PathVariable String type, @PathVariable Long id) {
         switch (type.toLowerCase()) {

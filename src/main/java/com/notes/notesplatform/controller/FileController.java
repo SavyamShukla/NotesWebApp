@@ -28,7 +28,7 @@ public ResponseEntity<Resource> getFile(@PathVariable String filename) {
 
         if (resource.exists() && resource.isReadable()) {
             return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_PDF)  // Important: tell browser it's PDF
+                    .contentType(MediaType.APPLICATION_PDF)  
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                     .body(resource);
         } else {

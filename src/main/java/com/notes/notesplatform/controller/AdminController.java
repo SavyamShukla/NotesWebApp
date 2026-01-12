@@ -69,7 +69,7 @@ public String createCourse(@ModelAttribute Course course) {
     }
 }
 
-    // Handle class → subjects → chapters → notes
+    
     if (course.getClasses() != null) {
         for (ClassEntity classEntity : course.getClasses()) {
             classEntity.setCourse(course);
@@ -77,7 +77,7 @@ public String createCourse(@ModelAttribute Course course) {
             if (classEntity.getSubjects() != null) {
                 for (Subject subject : classEntity.getSubjects()) {
                     subject.setClassEntity(classEntity);
-                    subject.setCourse(course); // Optional: if you want both links
+                    subject.setCourse(course); 
 
                     if (subject.getChapters() != null) {
                         for (Chapter chapter : subject.getChapters()) {
