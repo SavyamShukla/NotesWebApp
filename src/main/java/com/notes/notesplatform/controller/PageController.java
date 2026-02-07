@@ -19,15 +19,7 @@ public class PageController {
         return "bin";
     }
 
-     @GetMapping("/logout")
-    public String logout(HttpServletResponse response) {
-        Cookie jwtCookie = new Cookie("jwt", null);
-        jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(0); // Deletes the cookie
-        response.addCookie(jwtCookie);
-        SecurityContextHolder.clearContext();
-        return "redirect:/index";
-    }
+    
 
     @GetMapping("/notesDemo")
     public String notedemopage(){

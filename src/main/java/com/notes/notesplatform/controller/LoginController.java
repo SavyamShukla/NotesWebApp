@@ -281,7 +281,7 @@ public class LoginController {
         response.addCookie(jwtCookie);
     }
 
-  /* @GetMapping("/logout")
+   @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setPath("/");
@@ -289,7 +289,7 @@ public class LoginController {
         response.addCookie(jwtCookie);
         SecurityContextHolder.clearContext();
         return "redirect:/index";
-    }*/
+    }
 
 
      @PostMapping("/forgot-password/send-otp")
