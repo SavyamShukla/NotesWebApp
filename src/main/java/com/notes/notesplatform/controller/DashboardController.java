@@ -36,7 +36,7 @@ public class DashboardController {
         }
         return "redirect:/login";
     }
-       */
+       
     @GetMapping("/dashboard")
 public String redirectDashboard(Authentication authentication) {
     if (authentication != null) {
@@ -50,7 +50,19 @@ public String redirectDashboard(Authentication authentication) {
     }
     return "redirect:/login";
 }
+*/
 
+@GetMapping("/dashboard")
+public String redirectDashboard(Authentication authentication) {
+    if (authentication != null) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equalsIgnoreCase("ROLE_ADMIN") 
+                            || a.getAuthority().equalsIgnoreCase("ADMIN"));
+        
+        return isAdmin ? "redirect:/admin/dashboard" : "redirect:/user/dashboard";
+    }
+    return "redirect:/login";
+}
     
     @GetMapping("/admin/dashboard")
     public String adminDashboard() {

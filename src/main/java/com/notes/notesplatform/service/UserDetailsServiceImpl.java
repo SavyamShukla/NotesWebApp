@@ -14,8 +14,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Override
+/*    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
@@ -35,5 +34,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
            builder.roles("USER"); 
 
         return builder.build();
+    }*/
+
+        @Override
+public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+
+    String role = user.getRole();
+    if (role == null || role.trim().isEmpty()) {
+        role = "USER";
     }
+
+    // Ensure it looks like ROLE_ADMIN or ROLE_USER
+    String finalRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+
+    return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+            .password(user.getPassword())
+            .authorities(finalRole) // This sets the authority correctly
+            .build();
+}
 }
