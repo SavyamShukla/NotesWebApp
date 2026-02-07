@@ -61,7 +61,7 @@ public AuthenticationManager authenticationManager(HttpSecurity http) throws Exc
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
                 
-                .requestMatchers("/", "/index", "/index.html", "/css/**", "/js/**", "/images/**","/logout",
+                .requestMatchers("/", "/index", "/index.html", "/css/**", "/js/**", "/images/**","/logout","/login/**",
                                 "/login", "/register/**", "/send-login-otp", "/forgot-password/**").permitAll()
             
                 .requestMatchers("/admin/**").hasRole("ADMIN")
