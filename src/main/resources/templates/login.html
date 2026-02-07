@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-    <div th:if="${successMessage}" class="alert success">
-    <p th:text="${successMessage}"></p>
+    <div th:if="${error}" class="alert error">
+    <p th:text="${error}"></p>
 </div>
-
-<div th:if="${errorMessage}" class="alert error">
-    <p th:text="${errorMessage}"></p>
+<div th:if="${message}" class="alert success">
+    <p th:text="${message}"></p>
 </div>
 <div class="login-container">
     

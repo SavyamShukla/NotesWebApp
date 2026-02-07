@@ -1,5 +1,5 @@
 
-
+/*
 package com.notes.notesplatform.security;
 
 import io.jsonwebtoken.Jwts;
@@ -21,4 +21,4 @@ public class JwtUtil {
                 .signWith(key)
                 .compact();
     }
-}
+}*/
