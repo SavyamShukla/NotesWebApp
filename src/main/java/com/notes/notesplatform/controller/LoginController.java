@@ -286,7 +286,7 @@ public class LoginController {
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0); // Deletes the cookie
         response.addCookie(jwtCookie);
-        return "redirect:/login";
+        return "redirect:/index";
     }
 
 
