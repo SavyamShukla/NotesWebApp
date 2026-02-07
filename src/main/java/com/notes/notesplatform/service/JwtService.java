@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = "mysecretkey12345"; // Change to something secure
+    private final String SECRET_KEY = "mysecretkey12345"; 
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

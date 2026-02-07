@@ -1,9 +1,9 @@
 package com.notes.notesplatform.model;
 
 public class AuthRequest {
-    private String username;  // Can be email or phone
-    private String password;  // Optional if using OTP
-    private String otp;       // Optional if using password
+    private String username;  
+    private String password;  
+    private String otp;       
 
     public AuthRequest() {}
 

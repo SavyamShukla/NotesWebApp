@@ -31,21 +31,7 @@
 		<aws.java.sdk.version>2.25.43</aws.java.sdk.version>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3</artifactId>
-            <version>${aws.java.sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>software.amazon.awssdk</groupId>
-            <artifactId>s3-presigner</artifactId>
-            <version>${aws.java.sdk.version}</version>
-        </dependency>
-		</dependencies>
-	</dependencyManagement>
-
+	
 
 	<dependencies>
 
