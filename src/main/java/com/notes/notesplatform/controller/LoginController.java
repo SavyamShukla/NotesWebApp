@@ -195,6 +195,7 @@ import com.notes.notesplatform.service.OtpService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -286,6 +287,7 @@ public class LoginController {
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0); // Deletes the cookie
         response.addCookie(jwtCookie);
+        SecurityContextHolder.clearContext();
         return "redirect:/index";
     }
 
