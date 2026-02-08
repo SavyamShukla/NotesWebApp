@@ -93,7 +93,7 @@ public class BinController {
         }).toList();
     }
 
-    @GetMapping("/notes")
+    /*@GetMapping("/notes")
     public List<Map<String, Object>> getDeletedNotes() {
         List<Note> deleted = noteRepository.findByDeletedTrue();
         return deleted.stream().map(note -> {
@@ -123,6 +123,12 @@ public class BinController {
             return map;
         }).toList();
     }
+  */
+
+    @GetMapping("/notes")
+public List<Map<String, Object>> getDeletedNotes() {
+    return noteRepository.findDeletedNotesWithFullPath();
+}
 
     
     @PutMapping("/restore/{type}/{id}")
