@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 public class Chapter {
     @Id
@@ -18,6 +20,7 @@ public class Chapter {
     @JsonBackReference("subject-chapter")
     private Subject subject;
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("chapter-note")
     private List<Note> notes;
