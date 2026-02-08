@@ -1,4 +1,4 @@
-package com.notes.notesplatform.controller;
+/*package com.notes.notesplatform.controller;
 
 import com.notes.notesplatform.model.*;
 import com.notes.notesplatform.repository.*;
@@ -172,9 +172,9 @@ public class ExistingCourseController {
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-}
+}*/
 
-/*
+
 package com.notes.notesplatform.controller;
 
 import com.notes.notesplatform.model.*;
@@ -206,6 +206,11 @@ public class ExistingCourseController {
 
     @Autowired
     private NoteRepository noteRepository;
+
+    @GetMapping
+    public String existingCoursesPage() {
+        return "existing-course";
+    }
 
     // ------------------ COURSE ------------------
 
@@ -345,4 +350,3 @@ public class ExistingCourseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
-*/
