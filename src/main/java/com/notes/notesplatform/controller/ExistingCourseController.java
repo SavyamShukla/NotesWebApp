@@ -207,19 +207,23 @@ public class ExistingCourseController {
     @Autowired
     private NoteRepository noteRepository;
 
+    // -------- PAGE --------
+
     @GetMapping
     public String existingCoursesPage() {
         return "existing-course";
     }
 
-    // ------------------ COURSE ------------------
+    // -------- COURSE --------
 
     @GetMapping("/all")
+    @ResponseBody
     public List<Course> getAllCourses() {
         return courseRepository.findByDeletedFalse();
     }
 
     @GetMapping("/{id}")
+    @ResponseBody
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
         return courseRepository.findByIdAndDeletedFalse(id)
                 .map(ResponseEntity::ok)
@@ -227,6 +231,7 @@ public class ExistingCourseController {
     }
 
     @PutMapping("/{id}")
+    @ResponseBody
     public ResponseEntity<Course> updateCourse(
             @PathVariable Long id,
             @Valid @RequestBody Course updatedCourse) {
@@ -241,6 +246,7 @@ public class ExistingCourseController {
     }
 
     @PostMapping("/soft-delete-course/{id}")
+    @ResponseBody
     public ResponseEntity<?> softDeleteCourse(@PathVariable Long id) {
         return courseRepository.findById(id)
                 .map(course -> {
@@ -251,9 +257,10 @@ public class ExistingCourseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // ------------------ CLASS ------------------
+    // -------- CLASS --------
 
     @PostMapping("/soft-delete-class/{id}")
+    @ResponseBody
     public ResponseEntity<?> softDeleteClass(@PathVariable Long id) {
         return classRepository.findById(id)
                 .map(cls -> {
@@ -265,13 +272,15 @@ public class ExistingCourseController {
     }
 
     @GetMapping("/{courseId}/classes")
+    @ResponseBody
     public List<ClassEntity> getClassesByCourse(@PathVariable Long courseId) {
         return classRepository.findByCourseIdAndDeletedFalse(courseId);
     }
 
-    // ------------------ SUBJECT ------------------
+    // -------- SUBJECT --------
 
     @PostMapping("/soft-delete-subject/{id}")
+    @ResponseBody
     public ResponseEntity<?> softDeleteSubject(@PathVariable Long id) {
         return subjectRepository.findById(id)
                 .map(sub -> {
@@ -283,13 +292,15 @@ public class ExistingCourseController {
     }
 
     @GetMapping("/classes/{classId}/subjects")
+    @ResponseBody
     public List<Subject> getSubjectsByClass(@PathVariable Long classId) {
         return subjectRepository.findByClassEntityIdAndDeletedFalse(classId);
     }
 
-    // ------------------ CHAPTER ------------------
+    // -------- CHAPTER --------
 
     @PostMapping("/soft-delete-chapter/{id}")
+    @ResponseBody
     public ResponseEntity<?> softDeleteChapter(@PathVariable Long id) {
         return chapterRepository.findById(id)
                 .map(ch -> {
@@ -301,13 +312,15 @@ public class ExistingCourseController {
     }
 
     @GetMapping("/subjects/{subjectId}/chapters")
+    @ResponseBody
     public List<Chapter> getChaptersBySubject(@PathVariable Long subjectId) {
         return chapterRepository.findBySubjectIdAndDeletedFalse(subjectId);
     }
 
-    // ------------------ NOTE ------------------
+    // -------- NOTE --------
 
     @PostMapping("/soft-delete-note/{id}")
+    @ResponseBody
     public ResponseEntity<?> softDeleteNote(@PathVariable Long id) {
         return noteRepository.findById(id)
                 .map(note -> {
@@ -319,11 +332,13 @@ public class ExistingCourseController {
     }
 
     @GetMapping("/chapters/{chapterId}/notes")
+    @ResponseBody
     public List<Note> getNotesByChapter(@PathVariable Long chapterId) {
         return noteRepository.findByChapterIdAndDeletedFalse(chapterId);
     }
 
     @PutMapping("/update-note/{id}")
+    @ResponseBody
     public ResponseEntity<Note> updateNote(
             @PathVariable Long id,
             @RequestBody Map<String, Object> payload) {
