@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 public class Course {
     @Id
@@ -17,7 +19,8 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade= CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("course-subject")
     private List<Subject> subjects;
-
+    
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("course-classes")
     private List<ClassEntity> classes;
