@@ -15,7 +15,7 @@ public class Course {
     private String description;
    
  
-
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade= CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("course-subject")
     private List<Subject> subjects;

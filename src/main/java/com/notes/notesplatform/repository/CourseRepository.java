@@ -31,11 +31,8 @@ import com.notes.notesplatform.model.Course;
 }*/
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    
-    // Only fetch subjects here to avoid MultipleBagFetchException
-    @EntityGraph(attributePaths = {"subjects"})
-    List<Course> findByDeletedFalse();
-
-    @EntityGraph(attributePaths = {"subjects"})
-    List<Course> findByDeletedTrue();
+     List<Course> findByDeletedFalse();
+     List<Course> findByDeletedTrue();
+     
+     
 }
