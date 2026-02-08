@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthFilter; // Add this
+    private final JwtAuthenticationFilter jwtAuthFilter; 
 
     public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthenticationFilter jwtAuthFilter) {
         this.userDetailsService = userDetailsService;
@@ -69,9 +69,9 @@ public class SecurityConfig {
                         .requestMatchers("/dashboard/**", "/notes/download/**").authenticated()
                         .anyRequest().permitAll())
                         .logout(logout -> logout
-                        .logoutUrl("/logout") // Intercept this URL
-                        .logoutSuccessUrl("/index") // THIS is the fix: redirect to /index
-                        .deleteCookies("jwt") // Clean up the cookie
+                        .logoutUrl("/logout") 
+                        .logoutSuccessUrl("/index") 
+                        .deleteCookies("jwt") 
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .permitAll())
