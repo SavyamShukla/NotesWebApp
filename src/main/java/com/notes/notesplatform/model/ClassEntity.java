@@ -101,6 +101,7 @@ public class ClassEntity {
     private Course course;
 
     @BatchSize(size = 10)
+    @JsonIgnore
     @OneToMany(mappedBy = "classEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Subject> subjects;
 
