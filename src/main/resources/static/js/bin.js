@@ -56,7 +56,9 @@ async function restoreItem(type, id) {
 
 async function permanentlyDelete(type, id) {
     if (confirm(`Permanently delete this ${type}? This cannot be undone.`)) {
-        await fetch(`/admin/delete-${type}/${id}`, { method: 'POST' });
+        await fetch(`/bin/permanent/${type}/${id}`, { method: 'DELETE' });
+        
+
         loadDeleted(type, document.querySelector('.sidebar li.active'));
     }
 }

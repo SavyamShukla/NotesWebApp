@@ -177,4 +177,25 @@ public List<Map<String, Object>> getDeletedNotes() {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @DeleteMapping("/permanent/{type}/{id}")
+public ResponseEntity<?> permanentlyDelete(
+        @PathVariable String type,
+        @PathVariable Long id) {
+
+    switch (type.toLowerCase()) {
+
+        case "courses" -> courseRepository.deleteById(id);
+        case "classes" -> classRepository.deleteById(id);
+        case "subjects" -> subjectRepository.deleteById(id);
+        case "chapters" -> chapterRepository.deleteById(id);
+        case "notes" -> noteRepository.deleteById(id);
+        default -> {
+            return ResponseEntity.badRequest().body("Invalid type");
+        }
+    }
+
+    return ResponseEntity.ok().build();
+}
+
 }
