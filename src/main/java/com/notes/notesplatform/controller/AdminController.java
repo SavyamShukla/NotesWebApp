@@ -121,14 +121,35 @@ public String createCourse(@ModelAttribute Course course) {
     }
 
     // Add Subject under a Class
-    @PostMapping("/add-subject")
+    /*@PostMapping("/add-subject")
     public String addSubject(@RequestParam Long classId, @RequestParam String subjectName) {
         ClassEntity classEntity = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
         Subject subject = new Subject(subjectName, classEntity);
         subjectRepository.save(subject);
         return "redirect:/admin/manage-courses";
-    }
+    }*/
+
+
+        @PostMapping("/add-subject")
+public String addSubject(@RequestParam Long classId,
+                         @RequestParam String subjectName) {
+
+    ClassEntity classEntity = classRepository.findById(classId)
+            .orElseThrow(() -> new RuntimeException("Class not found"));
+
+    Course course = classEntity.getCourse();   // 🔥 get parent course
+
+    Subject subject = new Subject();
+    subject.setName(subjectName);
+    subject.setClassEntity(classEntity);
+    subject.setCourse(course);                 // 🔥 VERY IMPORTANT
+
+    subjectRepository.save(subject);
+
+    return "redirect:/admin/manage-courses";
+}
+
 
     // Add Chapter under a Subject
     @PostMapping("/add-chapter")
