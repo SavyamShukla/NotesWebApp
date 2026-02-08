@@ -161,7 +161,7 @@ async function toggleSubEntities(type, id, btn) {
                 const div = document.createElement('div');
                 div.className = 'entity-item';
                 div.innerHTML = `
-                    Note: ${note.title} (Price: ${note.price} ${note.is_free ? '- Free' : ''})
+                    Note: ${note.title} (Price: ${note.price} ${note.isFree ? '- Free' : ''})
                     <span class="entity-actions">
                         <button onclick="deleteEntity('note', ${note.id})">Delete</button>
                         <button onclick="editNote(${note.id}, '${note.fileUrl}',${note.price}, ${note.isFree})">Edit</button>
@@ -283,7 +283,7 @@ function viewNote(fileUrl) {
     };
 
     try {
-        await fetch(`existing-courses/update-note/${id}`, {
+        await fetch(`/existing-courses/update-note/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedNote)
