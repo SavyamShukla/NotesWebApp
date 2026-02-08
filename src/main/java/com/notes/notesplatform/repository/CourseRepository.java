@@ -20,7 +20,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.notes.notesplatform.model.Course;
 
-/*public interface CourseRepository extends JpaRepository<Course, Long> {
+public interface CourseRepository extends JpaRepository<Course, Long> {
 
     // Adding both subjects and classes to the attributePaths
     @EntityGraph(attributePaths = {"subjects", "classes"})
@@ -28,11 +28,5 @@ import com.notes.notesplatform.model.Course;
 
     @EntityGraph(attributePaths = {"subjects", "classes"})
     List<Course> findByDeletedTrue();
-}*/
-
-public interface CourseRepository extends JpaRepository<Course, Long> {
-     List<Course> findByDeletedFalse();
-     List<Course> findByDeletedTrue();
-     
-     
 }
+
