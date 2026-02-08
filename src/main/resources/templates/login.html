@@ -7,12 +7,7 @@
     <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-    <div th:if="${error}" class="alert error">
-    <p th:text="${error}"></p>
-</div>
-<div th:if="${message}" class="alert success">
-    <p th:text="${message}"></p>
-</div>
+   
 <div class="login-container">
     
     <div class="login-card">
@@ -45,6 +40,12 @@
     <p class="register-text">
         New User? <a href="/register" class="register-link">Register!</a>
     </p>
+     <div th:if="${error}" class="alert error">
+    <p th:text="${error}"></p>
+</div>
+<div th:if="${message}" class="alert success">
+    <p th:text="${message}"></p>
+</div>
 </div>
 
 <!-- Forgot Password Modal -->
