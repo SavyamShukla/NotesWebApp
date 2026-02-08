@@ -1,7 +1,11 @@
 package com.notes.notesplatform.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 import org.hibernate.annotations.BatchSize;
 
@@ -18,12 +22,12 @@ public class Course {
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade= CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("course-subject")
-    private List<Subject> subjects;
+    private Set<Subject> subjects = new HashSet<>();
     
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("course-classes")
-    private List<ClassEntity> classes;
+    private Set<ClassEntity> classes = new HashSet<>();
 
 
     // Getters and Setters
@@ -36,13 +40,13 @@ public class Course {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public List<ClassEntity> getClasses() {return classes;}
-    public void setClasses(List<ClassEntity> classes) {this.classes = classes;}
+    public  Set<ClassEntity> getClasses() {return classes;}
+    public void setClasses(Set<ClassEntity> classes) {this.classes = classes;}
 
     public boolean isDeleted() {return deleted;}
     public void setDeleted(boolean deleted){this.deleted= deleted;}
 
-    public List<Subject> getSubjects() {return subjects;}
-    public void setSubjects(List<Subject> subjects) {this.subjects = subjects;}
+    public Set<Subject> getSubjects() {return subjects;}
+    public void setSubjects(Set<Subject> subjects) {this.subjects = subjects;}
     
 }
