@@ -161,5 +161,5 @@ public String showResetResult(@RequestParam("message") String message,
     return "reset-result";
 }
     
-    // ... Keep your forgot-password methods here as they were ...
+   
 }

@@ -1,82 +1,3 @@
-/*package com.notes.notesplatform.model;
-
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
-import java.util.List;
-
-import org.hibernate.annotations.BatchSize;
-
-@Entity
-public class Subject {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private boolean deleted = false;
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "class_id", nullable= true)
-    @JsonBackReference("class-subject")
-    private ClassEntity classEntity;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable= false)
-    @JsonBackReference("course-subject")
-    private Course course;
-
-    @BatchSize(size = 10)
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("subject-chapter")
-    @JsonIgnore
-    private List<Chapter> chapters;
-
-    // Getters and Setters
-
-    public Subject() {}
-
-    public Subject(String name, ClassEntity classEntity) {
-        this.name = name;
-        this.classEntity = classEntity;
-    }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public ClassEntity getClassEntity() { return classEntity; }
-    public void setClassEntity(ClassEntity classEntity) { this.classEntity = classEntity; }
-
-    public List<Chapter> getChapters() {
-    return chapters;
-}
-
-public void setChapters(List<Chapter> chapters) {
-    this.chapters = chapters;
-}
-
-     public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted){
-        this.deleted= deleted;
-    }
-
-    public Course getCourse() {
-    return course;
-}
-
-public void setCourse(Course course) {
-    this.course = course;
-}
-}*/
-
-
 package com.notes.notesplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -99,17 +20,17 @@ public class Subject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = true)
-    @JsonIgnore   // prevents circular reference
+    @JsonIgnore   
     private ClassEntity classEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
-    @JsonIgnore   // prevents circular reference
+    @JsonIgnore   
     private Course course;
 
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore   // we load chapters via separate endpoint
+    @JsonIgnore   
     private List<Chapter> chapters;
 
     // Constructors

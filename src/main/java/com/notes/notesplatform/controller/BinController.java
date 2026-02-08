@@ -93,38 +93,7 @@ public class BinController {
         }).toList();
     }
 
-    /*@GetMapping("/notes")
-    public List<Map<String, Object>> getDeletedNotes() {
-        List<Note> deleted = noteRepository.findByDeletedTrue();
-        return deleted.stream().map(note -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", note.getId());
-            map.put("title", note.getTitle());
-            map.put("fileUrl", note.getFileUrl());
-            map.put("price", note.getPrice());
-            map.put("isFree", note.isFree());
-            String courseName = "Unknown Course";
-            String className = "Unknown Class";
-            String subjectName = "Unknown Subject";
-            String chapterName = "Unknown Chapter";
-            if (note.getChapter() != null) {
-                chapterName = note.getChapter().getName();
-                if (note.getChapter().getSubject() != null) {
-                    subjectName = note.getChapter().getSubject().getName();
-                    if (note.getChapter().getSubject().getClassEntity() != null) {
-                        className = note.getChapter().getSubject().getClassEntity().getName();
-                        if (note.getChapter().getSubject().getClassEntity().getCourse() != null) {
-                            courseName = note.getChapter().getSubject().getClassEntity().getCourse().getName();
-                        }
-                    }
-                }
-            }
-            map.put("fullPath", courseName + " > " + className + " > " + subjectName + " > " + chapterName + " > " + note.getTitle());
-            return map;
-        }).toList();
-    }
-  */
-
+   
     @GetMapping("/notes")
 public List<Map<String, Object>> getDeletedNotes() {
     return noteRepository.findDeletedNotesWithFullPath();

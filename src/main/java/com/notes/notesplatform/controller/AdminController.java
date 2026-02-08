@@ -120,15 +120,7 @@ public String createCourse(@ModelAttribute Course course) {
         return "redirect:/admin/manage-courses";
     }
 
-    // Add Subject under a Class
-    /*@PostMapping("/add-subject")
-    public String addSubject(@RequestParam Long classId, @RequestParam String subjectName) {
-        ClassEntity classEntity = classRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Class not found"));
-        Subject subject = new Subject(subjectName, classEntity);
-        subjectRepository.save(subject);
-        return "redirect:/admin/manage-courses";
-    }*/
+    
 
 
         @PostMapping("/add-subject")
