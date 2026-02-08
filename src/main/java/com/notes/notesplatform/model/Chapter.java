@@ -1,6 +1,7 @@
 package com.notes.notesplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
@@ -23,6 +24,7 @@ public class Chapter {
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("chapter-note")
+    @JsonIgnore
     private List<Note> notes;
 
     // Getters and Setters
