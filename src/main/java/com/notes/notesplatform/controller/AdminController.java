@@ -168,7 +168,7 @@ public String createCourse(@ModelAttribute Course course) {
     public String manageCourses(Model model) {
         List<Course> courses = courseRepository.findAll();
         model.addAttribute("courses", courses);
-        return "manage-courses";
+        return "new-course";
     }
 
     // Add Class under a Course
