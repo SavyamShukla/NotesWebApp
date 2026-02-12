@@ -42,7 +42,7 @@
             <p class="purchase-date">
                 Purchased on: <span th:text="${#temporals.format(purchase.purchasedAt, 'dd-MM-yyyy HH:mm')}"></span>
             </p>
-            <a th:href="@{'/notesDemo'}" class="btn-open unlocked">Download</a>
+            <a th:href="@{'https://lksdahsyqqcmrvcjyxkn.supabase.co/storage/v1/object/public/BucketForNotes/' + ${note.fileUrl}}" class="btn-open unlocked" target="_blank" download>Download</a>
         </div>
     </div>
 </main>

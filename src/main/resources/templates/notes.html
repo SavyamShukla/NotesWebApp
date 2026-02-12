@@ -79,8 +79,8 @@
                 </div>
 
                 <div sec:authorize="!isAuthenticated()">
-                    <a th:if="${note.free}" th:href="@{'/notesDemo'}"
-                       class="btn-open unlocked">Download</a>
+                    <a th:if="${note.free}" th:href="@{'https://lksdahsyqqcmrvcjyxkn.supabase.co/storage/v1/object/public/BucketForNotes/' + ${note.fileUrl}}" taget="_blank"
+                       class="btn-open unlocked" download>Download</a>
 
                     <a th:unless="${note.free}" href="/login"
                        class="btn-open locked disabled">Login to Buy 🔒</a>
