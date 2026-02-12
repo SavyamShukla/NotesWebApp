@@ -21,7 +21,7 @@ public class Course {
 
     private String name;
     private String description;
-
+  /*
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Subject> subjects = new ArrayList<>();
@@ -29,7 +29,16 @@ public class Course {
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClassEntity> classes = new ArrayList<>();
+  */
 
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderColumn(name = "subject_order") // Adds an index column to maintain List order
+    private List<Subject> subjects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderColumn(name = "class_order") // Adds an index column to maintain List order
+    private List<ClassEntity> classes = new ArrayList<>();
     // Getters and Setters
 
     public Long getId() { 
