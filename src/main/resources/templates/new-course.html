@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
     <h1>Create New Course</h1>
 
     <form id="courseForm" th:action="@{/admin/new-course}" method="post" class="course-form">
-        <!-- Course Details -->
+        <!- Course Details ->
         <div class="card">
             <h2>Course Details</h2>
             <label for="courseName">Course Name</label>
@@ -22,21 +22,21 @@
             <textarea id="description" name="description" placeholder="Enter course description" rows="3"></textarea>
         </div>
 
-        <!-- Course Has Class? -->
+        <!-- Course Has Class? ->
         <div class="card">
             <h2>Does this course have classes?</h2>
             <label><input type="radio" name="hasClasses" value="yes" checked onclick="toggleClassSection(true)"> Yes</label>
             <label><input type="radio" name="hasClasses" value="no" onclick="toggleClassSection(false)"> No</label>
         </div>
 
-        <!-- Classes -->
+        <!-- Classes ->
         <div class="card" id="classes-section">
             <h2>Classes</h2>
             <div id="classes-container"></div>
             <button type="button" class="btn-secondary" onclick="addClass()">+ Add Class</button>
         </div>
 
-        <!-- Subjects (if no classes) -->
+        <!-- Subjects (if no classes) ->
         <div class="card" id="subjects-section" style="display: none;">
             <h2>Subjects</h2>
             <div id="subjects-no-class-container"></div>
@@ -47,7 +47,67 @@
     </form>
 </div>
 
-<!-- Confirmation Modal -->
+<!-- Confirmation Modal ->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-secondary" onclick="closeConfirmation()">Cancel</button>
+            <button type="button" class="btn-primary" onclick="submitForm()">Confirm Submit</button>
+        </div>
+        <span class="close" onclick="closeConfirmation()">&times;</span>
+        <h2>Confirm Course Creation</h2>
+        <div id="confirmationDetails"></div>
+    </div>
+</div>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Course</title>
+    <link rel="stylesheet" href="/css/new-course.css">
+    <script src="/js/new-course.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <h1>Create New Course</h1>
+
+    <form id="courseForm" th:action="@{/admin/new-course}" method="post" enctype="multipart/form-data" class="course-form">
+        
+        <div class="card">
+            <h2>Course Details</h2>
+            <label for="courseName">Course Name</label>
+            <input type="text" id="courseName" name="name" placeholder="Enter course name" required>
+
+            <label for="description">Course Description</label>
+            <textarea id="description" name="description" placeholder="Enter course description" rows="3"></textarea>
+        </div>
+
+        <div class="card">
+            <h2>Does this course have classes?</h2>
+            <label><input type="radio" name="hasClasses" value="yes" checked onclick="toggleClassSection(true)"> Yes</label>
+            <label><input type="radio" name="hasClasses" value="no" onclick="toggleClassSection(false)"> No</label>
+        </div>
+
+        <div class="card" id="classes-section">
+            <h2>Classes</h2>
+            <div id="classes-container"></div>
+            <button type="button" class="btn-secondary" onclick="addClass()">+ Add Class</button>
+        </div>
+
+        <div class="card" id="subjects-section" style="display: none;">
+            <h2>Subjects</h2>
+            <div id="subjects-no-class-container"></div>
+            <button type="button" class="btn-secondary" onclick="addSubjectNoClass()">+ Add Subject</button>
+        </div>
+
+        <button type="button" class="btn-primary" onclick="openConfirmation()">Create Course</button>
+    </form>
+</div>
+
 <div id="confirmationModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">

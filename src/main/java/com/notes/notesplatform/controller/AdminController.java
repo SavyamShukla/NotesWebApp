@@ -2,14 +2,17 @@ package com.notes.notesplatform.controller;
 
 import com.notes.notesplatform.model.*;
 import com.notes.notesplatform.repository.*;
+import com.notes.notesplatform.service.*;
 
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import com.notes.notesplatform.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,6 +37,9 @@ public class AdminController {
     @Autowired
     private NoteRepository noteRepository;
 
+    @Autowired
+    private StorageService storageService;
+
    
     // New course page
     @GetMapping("/new-course")
@@ -44,7 +50,7 @@ public class AdminController {
 
 
 
-
+/* 
 @PostMapping("/new-course")
 public String createCourse(@ModelAttribute Course course) {
 
@@ -97,7 +103,62 @@ public String createCourse(@ModelAttribute Course course) {
 
     courseRepository.save(course);
     return "redirect:/admin/dashboard";
-}
+}*/
+
+
+@PostMapping("/new-course")
+    public String createCourse(@ModelAttribute Course course, 
+                               @RequestParam(value = "noteFiles", required = false) List<MultipartFile> noteFiles) {
+        
+        // Counter ensures files match the Note objects in order of appearance
+        final int[] fileIndex = {0};
+
+        // Handle hierarchy with direct subjects
+        if (course.getSubjects() != null) {
+            for (Subject subject : course.getSubjects()) {
+                subject.setCourse(course);
+                processChapters(subject.getChapters(), noteFiles, fileIndex);
+            }
+        }
+
+        // Handle hierarchy with classes
+        if (course.getClasses() != null) {
+            for (ClassEntity classEntity : course.getClasses()) {
+                classEntity.setCourse(course);
+                if (classEntity.getSubjects() != null) {
+                    for (Subject subject : classEntity.getSubjects()) {
+                        subject.setClassEntity(classEntity);
+                        subject.setCourse(course); 
+                        processChapters(subject.getChapters(), noteFiles, fileIndex);
+                    }
+                }
+            }
+        }
+
+        courseRepository.save(course);
+        return "redirect:/admin/manage-courses";
+    }
+
+    private void processChapters(List<Chapter> chapters, List<MultipartFile> files, int[] index) {
+        if (chapters != null) {
+            for (Chapter chapter : chapters) {
+                if (chapter.getNotes() != null) {
+                    for (Note note : chapter.getNotes()) {
+                        note.setChapter(chapter);
+                        // Assign file if available in the sequential list
+                        if (files != null && index[0] < files.size() && !files.get(index[0]).isEmpty()) {
+                            try {
+                                String uploadedName = storageService.uploadFile(files.get(index[0]++));
+                                note.setFileUrl(uploadedName);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Upload failed", e);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 
@@ -154,6 +215,7 @@ public String addSubject(@RequestParam Long classId,
     }
 
     // Add Note under a Chapter
+    /*
     @PostMapping("/add-note")
     public String addNote(@RequestParam Long chapterId,
                           @RequestParam String title,
@@ -166,6 +228,29 @@ public String addSubject(@RequestParam Long classId,
         noteRepository.save(note);
         return "redirect:/admin/manage-courses";
     }
+*/
+
+
+@PostMapping("/add-note")
+    public String addNote(@RequestParam Long chapterId,
+                          @RequestParam String title,
+                          @RequestParam("file") MultipartFile file,
+                          @RequestParam BigDecimal price,
+                          @RequestParam(defaultValue = "false") boolean isFree) {
+        
+        Chapter chapter = chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+
+        try {
+            String fileName = storageService.uploadFile(file);
+            Note note = new Note(title, fileName, price, isFree, chapter);
+            noteRepository.save(note);
+        } catch (Exception e) {
+            throw new RuntimeException("Single upload failed", e);
+        }
+        return "redirect:/admin/manage-courses";
+    }
+
 
     // Delete any entity
     @PostMapping("/delete-course/{id}")
@@ -206,3 +291,4 @@ public String addSubject(@RequestParam Long classId,
    
     
 }
+
