@@ -58,10 +58,14 @@
             <div class="note-actions">
                 <div sec:authorize="isAuthenticated()">
                     <!-- If note is free OR user has already purchased it, show Download button -->
-                    <div th:if="${note.free} or ${userHasNote.get(note.id)}">
-                         <a th:href="@{'/notesDemo'}"
-                           class="btn-open unlocked">Download</a>
-                    </div>
+                    <div th:if="${note.isFree} or ${userHasNote.get(note.id)}">
+    <a th:href="@{'https://your-project-id.storage.supabase.co/object/public/BucketForNotes/' + ${note.fileUrl}}"
+       class="btn-open unlocked" 
+       target="_blank" 
+       download>
+       Download PDF
+    </a>
+</div>
 
                     <!-- If note is NOT free AND user has NOT purchased it, show Pay button -->
                     <div th:if="${!note.free} and !${userHasNote.get(note.id)}">
