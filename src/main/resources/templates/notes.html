@@ -104,7 +104,7 @@
     /* THIS WILL FAIL if you did not add "razorpayKey" to the model in your Java Controller */
     
    
-const razorpaykey = "[[${razorpayKey}]]";
+const razorpaykey = /*[[${razorpayKey}]]*/ 'fallback-key';
 
     
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
