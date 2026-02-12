@@ -59,7 +59,7 @@
                 <div sec:authorize="isAuthenticated()">
                     <!-- If note is free OR user has already purchased it, show Download button -->
                     <div th:if="${note.isFree} or ${userHasNote.get(note.id)}">
-    <a th:href="@{'https://lksdahsyqqcmrvcjyxkn.storage.supabase.co/object/public/BucketForNotes/' + ${note.fileUrl}}"
+    <a th:href="@{'https://lksdahsyqqcmrvcjyxkn.supabase.co/storage/v1/object/public/BucketForNotes/' + ${note.fileUrl}}"
        class="btn-open unlocked" 
        target="_blank" 
        download>
