@@ -103,8 +103,8 @@
     /* Get Razorpay Key from the model (as set in your Controller) */
     /* THIS WILL FAIL if you did not add "razorpayKey" to the model in your Java Controller */
     
-    /* Use Thymeleaf to inject the Key ID safely */
-const razorpaykey = "[[${razorpay.key.id}]]";
+   
+const razorpaykey = "[[${razorpayKeyId}]]";
 
     
     /* Safely get CSRF tokens. This will be null if CSRF is disabled, and won't crash. */
