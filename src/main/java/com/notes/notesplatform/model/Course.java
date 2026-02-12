@@ -2,7 +2,10 @@ package com.notes.notesplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.hibernate.annotations.BatchSize;
 
@@ -21,11 +24,11 @@ public class Course {
 
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Subject> subjects = new HashSet<>();
+    private List<Subject> subjects = new ArrayList<>();
 
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ClassEntity> classes = new HashSet<>();
+    private List<ClassEntity> classes = new ArrayList<>();
 
     // Getters and Setters
 
@@ -61,19 +64,19 @@ public class Course {
         this.description = description; 
     }
 
-    public Set<Subject> getSubjects() { 
+    public List<Subject> getSubjects() { 
         return subjects; 
     }
 
-    public void setSubjects(Set<Subject> subjects) { 
+    public void setSubjects(List<Subject> subjects) { 
         this.subjects = subjects; 
     }
 
-    public Set<ClassEntity> getClasses() { 
+    public List<ClassEntity> getClasses() { 
         return classes; 
     }
 
-    public void setClasses(Set<ClassEntity> classes) { 
+    public void setClasses(List<ClassEntity> classes) { 
         this.classes = classes; 
     }
 }
