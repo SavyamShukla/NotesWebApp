@@ -117,7 +117,7 @@ public String createCourse(@ModelAttribute Course course) {
         if (course.getSubjects() != null) {
             for (Subject subject : course.getSubjects()) {
                 subject.setCourse(course);
-                processChapters(subject.getChapters(), noteFiles, fileIndex);
+                processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
             }
         }
 
@@ -129,7 +129,7 @@ public String createCourse(@ModelAttribute Course course) {
                     for (Subject subject : classEntity.getSubjects()) {
                         subject.setClassEntity(classEntity);
                         subject.setCourse(course); 
-                        processChapters(subject.getChapters(), noteFiles, fileIndex);
+                        processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
                     }
                 }
             }
@@ -139,7 +139,7 @@ public String createCourse(@ModelAttribute Course course) {
         return "redirect:/admin/manage-courses";
     }
 
-    private void processChapters(List<Chapter> chapters, List<MultipartFile> files, int[] index) {
+   /*  private void processChapters(List<Chapter> chapters, List<MultipartFile> files, int[] index) {
         if (chapters != null) {
             for (Chapter chapter : chapters) {
                 if (chapter.getNotes() != null) {
@@ -158,7 +158,30 @@ public String createCourse(@ModelAttribute Course course) {
                 }
             }
         }
+    }*/
+   private void processChapters(Subject subject, List<Chapter> chapters, List<MultipartFile> files, int[] index) {
+    if (chapters != null) {
+        for (Chapter chapter : chapters) {
+            // CRITICAL FIX: Tell the chapter which subject it belongs to
+            chapter.setSubject(subject); 
+
+            if (chapter.getNotes() != null) {
+                for (Note note : chapter.getNotes()) {
+                    note.setChapter(chapter);
+                    
+                    if (files != null && index[0] < files.size() && !files.get(index[0]).isEmpty()) {
+                        try {
+                            String fileName = storageService.uploadFile(files.get(index[0]++));
+                            note.setFileUrl(fileName);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Supabase upload failed", e);
+                        }
+                    }
+                }
+            }
+        }
     }
+}
 
 
 
