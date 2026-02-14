@@ -41,6 +41,19 @@ public class Subject {
         this.classEntity = classEntity;
     }
 
+
+    // In com.notes.notesplatform.model.Subject
+@Column(name = "subject_order")
+private Integer subjectOrder; // This matches the @OrderColumn name
+
+public Integer getSubjectOrder() {
+    return subjectOrder;
+}
+
+public void setSubjectOrder(Integer subjectOrder) {
+    this.subjectOrder = subjectOrder;
+}
+
     // Getters and Setters
 
     public Long getId() {

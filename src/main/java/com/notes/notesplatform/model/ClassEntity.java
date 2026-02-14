@@ -37,6 +37,16 @@ public class ClassEntity {
         this.course = course;
     }
 
+
+
+    // In com.notes.notesplatform.model.ClassEntity
+@Column(name = "class_order")
+private Integer classOrder;
+
+public void setClassOrder(Integer classOrder) {
+    this.classOrder = classOrder;
+}
+
     // Getters and Setters
 
     public Long getId() {
