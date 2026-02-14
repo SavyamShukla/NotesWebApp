@@ -43,7 +43,7 @@
 
         <div th:each="class : ${classes}" class="class-card">
             <h2 class="class-title" th:text="${class.name}">Class Name</h2>
-            <!--<p class="class-description" th:text="${class.description}">Class Description</p>-->
+            
             <a th:href="@{'/subject-page'(classId=${class.id})}" class="btn-open">Open</a>
         </div>
     </div>

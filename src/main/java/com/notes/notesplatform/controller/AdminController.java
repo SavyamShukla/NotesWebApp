@@ -40,7 +40,6 @@ public class AdminController {
     @Autowired
     private StorageService storageService;
 
-   
     // New course page
     @GetMapping("/new-course")
     public String showNewCourseForm(Model model) {
@@ -48,87 +47,36 @@ public class AdminController {
         return "new-course";
     }
 
+    @PostMapping("/new-course")
+    public String createCourse(@ModelAttribute Course course,
+            @RequestParam(value = "noteFiles", required = false) List<MultipartFile> noteFiles) {
 
+        final int[] fileIndex = { 0 };
 
-/* 
-@PostMapping("/new-course")
-public String createCourse(@ModelAttribute Course course) {
-
-    // Handle direct subjects
-    
-
-    if (course.getSubjects() != null) {
-    for (Subject subject : course.getSubjects()) {
-        subject.setCourse(course);
-
-        if (subject.getChapters() != null) {
-            for (Chapter chapter : subject.getChapters()) {
-                chapter.setSubject(subject);
-
-                if (chapter.getNotes() != null) {
-                    for (Note note : chapter.getNotes()) {
-                        note.setChapter(chapter);
-                    }
-                }
-            }
-        }
-    }
-}
-
-    
-    if (course.getClasses() != null) {
-        for (ClassEntity classEntity : course.getClasses()) {
-            classEntity.setCourse(course);
-
-            if (classEntity.getSubjects() != null) {
-                for (Subject subject : classEntity.getSubjects()) {
-                    subject.setClassEntity(classEntity);
-                    subject.setCourse(course); 
-
-                    if (subject.getChapters() != null) {
-                        for (Chapter chapter : subject.getChapters()) {
-                            chapter.setSubject(subject);
-
-                            if (chapter.getNotes() != null) {
-                                for (Note note : chapter.getNotes()) {
-                                    note.setChapter(chapter);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    courseRepository.save(course);
-    return "redirect:/admin/dashboard";
-}*/
-
-
-/*@PostMapping("/new-course")
-    public String createCourse(@ModelAttribute Course course, 
-                               @RequestParam(value = "noteFiles", required = false) List<MultipartFile> noteFiles) {
-        
-        // Counter ensures files match the Note objects in order of appearance
-        final int[] fileIndex = {0};
-
-        // Handle hierarchy with direct subjects
         if (course.getSubjects() != null) {
-            for (Subject subject : course.getSubjects()) {
+            List<Subject> subjects = course.getSubjects();
+            for (int i = 0; i < subjects.size(); i++) {
+                Subject subject = subjects.get(i);
                 subject.setCourse(course);
+                subject.setSubjectOrder(i);
                 processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
             }
         }
 
-        // Handle hierarchy with classes
         if (course.getClasses() != null) {
-            for (ClassEntity classEntity : course.getClasses()) {
+            List<ClassEntity> classes = course.getClasses();
+            for (int i = 0; i < classes.size(); i++) {
+                ClassEntity classEntity = classes.get(i);
                 classEntity.setCourse(course);
+                classEntity.setClassOrder(i);
+
                 if (classEntity.getSubjects() != null) {
-                    for (Subject subject : classEntity.getSubjects()) {
+                    List<Subject> classSubjects = classEntity.getSubjects();
+                    for (int j = 0; j < classSubjects.size(); j++) {
+                        Subject subject = classSubjects.get(j);
                         subject.setClassEntity(classEntity);
-                        subject.setCourse(course); 
+                        subject.setCourse(course);
+                        subject.setSubjectOrder(j);
                         processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
                     }
                 }
@@ -139,106 +87,36 @@ public String createCourse(@ModelAttribute Course course) {
         return "redirect:/admin/manage-courses";
     }
 
-   / private void processChapters(List<Chapter> chapters, List<MultipartFile> files, int[] index) {
+    private void processChapters(Subject subject, List<Chapter> chapters, List<MultipartFile> files, int[] index) {
         if (chapters != null) {
             for (Chapter chapter : chapters) {
+
+                chapter.setSubject(subject);
+
                 if (chapter.getNotes() != null) {
                     for (Note note : chapter.getNotes()) {
                         note.setChapter(chapter);
-                        // Assign file if available in the sequential list
+
                         if (files != null && index[0] < files.size() && !files.get(index[0]).isEmpty()) {
                             try {
-                                String uploadedName = storageService.uploadFile(files.get(index[0]++));
-                                note.setFileUrl(uploadedName);
+                                String fileName = storageService.uploadFile(files.get(index[0]++));
+                                note.setFileUrl(fileName);
                             } catch (Exception e) {
-                                throw new RuntimeException("Upload failed", e);
+
+                                if (e.getMessage().contains("base 16")) {
+                                    System.out
+                                            .println("Warning: Checksum validation failed, but file likely uploaded.");
+                                } else {
+                                    throw new RuntimeException("Supabase upload failed", e);
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }*/
-
-
-    @PostMapping("/new-course")
-public String createCourse(@ModelAttribute Course course, 
-                           @RequestParam(value = "noteFiles", required = false) List<MultipartFile> noteFiles) {
-    
-    final int[] fileIndex = {0};
-
-    // 1. Handle hierarchy with direct subjects
-    if (course.getSubjects() != null) {
-        List<Subject> subjects = course.getSubjects();
-        for (int i = 0; i < subjects.size(); i++) {
-            Subject subject = subjects.get(i);
-            subject.setCourse(course);
-            subject.setSubjectOrder(i); // Assign sequential order to prevent NULL index crash
-            processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
-        }
     }
 
-    // 2. Handle hierarchy with classes
-    if (course.getClasses() != null) {
-        List<ClassEntity> classes = course.getClasses();
-        for (int i = 0; i < classes.size(); i++) {
-            ClassEntity classEntity = classes.get(i);
-            classEntity.setCourse(course);
-            classEntity.setClassOrder(i); // Assign sequential order for classes
-            
-            if (classEntity.getSubjects() != null) {
-                List<Subject> classSubjects = classEntity.getSubjects();
-                for (int j = 0; j < classSubjects.size(); j++) {
-                    Subject subject = classSubjects.get(j);
-                    subject.setClassEntity(classEntity);
-                    subject.setCourse(course); 
-                    subject.setSubjectOrder(j); // Assign sequential order within the class context
-                    processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
-                }
-            }
-        }
-    }
-
-    courseRepository.save(course);
-    return "redirect:/admin/manage-courses";
-}
-
-
-
-
-   private void processChapters(Subject subject, List<Chapter> chapters, List<MultipartFile> files, int[] index) {
-    if (chapters != null) {
-        for (Chapter chapter : chapters) {
-            // CRITICAL FIX: Tell the chapter which subject it belongs to
-            chapter.setSubject(subject); 
-
-            if (chapter.getNotes() != null) {
-                for (Note note : chapter.getNotes()) {
-                    note.setChapter(chapter);
-                    
-                    if (files != null && index[0] < files.size() && !files.get(index[0]).isEmpty()) {
-                        try {
-    String fileName = storageService.uploadFile(files.get(index[0]++));
-    note.setFileUrl(fileName);
-} catch (Exception e) {
-    // If the error is the Base16 checksum issue, we can log it and move on
-    if (e.getMessage().contains("base 16")) {
-        System.out.println("Warning: Checksum validation failed, but file likely uploaded.");
-    } else {
-        throw new RuntimeException("Supabase upload failed", e);
-    }
-}
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-    
-    // Manage existing courses
     @GetMapping("/manage-courses")
     public String manageCourses(Model model) {
         List<Course> courses = courseRepository.findAll();
@@ -246,7 +124,6 @@ public String createCourse(@ModelAttribute Course course,
         return "new-course";
     }
 
-    // Add Class under a Course
     @PostMapping("/add-class")
     public String addClass(@RequestParam Long courseId, @RequestParam String className) {
         Course course = courseRepository.findById(courseId)
@@ -256,28 +133,24 @@ public String createCourse(@ModelAttribute Course course,
         return "redirect:/admin/manage-courses";
     }
 
-    
+    @PostMapping("/add-subject")
+    public String addSubject(@RequestParam Long classId,
+            @RequestParam String subjectName) {
 
+        ClassEntity classEntity = classRepository.findById(classId)
+                .orElseThrow(() -> new RuntimeException("Class not found"));
 
-        @PostMapping("/add-subject")
-public String addSubject(@RequestParam Long classId,
-                         @RequestParam String subjectName) {
+        Course course = classEntity.getCourse();
 
-    ClassEntity classEntity = classRepository.findById(classId)
-            .orElseThrow(() -> new RuntimeException("Class not found"));
+        Subject subject = new Subject();
+        subject.setName(subjectName);
+        subject.setClassEntity(classEntity);
+        subject.setCourse(course);
 
-    Course course = classEntity.getCourse();   // 🔥 get parent course
+        subjectRepository.save(subject);
 
-    Subject subject = new Subject();
-    subject.setName(subjectName);
-    subject.setClassEntity(classEntity);
-    subject.setCourse(course);                 // 🔥 VERY IMPORTANT
-
-    subjectRepository.save(subject);
-
-    return "redirect:/admin/manage-courses";
-}
-
+        return "redirect:/admin/manage-courses";
+    }
 
     // Add Chapter under a Subject
     @PostMapping("/add-chapter")
@@ -289,30 +162,13 @@ public String addSubject(@RequestParam Long classId,
         return "redirect:/admin/manage-courses";
     }
 
-    // Add Note under a Chapter
-    /*
     @PostMapping("/add-note")
     public String addNote(@RequestParam Long chapterId,
-                          @RequestParam String title,
-                          @RequestParam String fileUrl,
-                          @RequestParam BigDecimal price,
-                          @RequestParam(defaultValue = "false") boolean isFree) {
-        Chapter chapter = chapterRepository.findById(chapterId)
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
-        Note note = new Note(title, fileUrl, price, isFree, chapter);
-        noteRepository.save(note);
-        return "redirect:/admin/manage-courses";
-    }
-*/
+            @RequestParam String title,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam BigDecimal price,
+            @RequestParam(defaultValue = "false") boolean isFree) {
 
-
-@PostMapping("/add-note")
-    public String addNote(@RequestParam Long chapterId,
-                          @RequestParam String title,
-                          @RequestParam("file") MultipartFile file,
-                          @RequestParam BigDecimal price,
-                          @RequestParam(defaultValue = "false") boolean isFree) {
-        
         Chapter chapter = chapterRepository.findById(chapterId)
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
@@ -325,7 +181,6 @@ public String addSubject(@RequestParam Long classId,
         }
         return "redirect:/admin/manage-courses";
     }
-
 
     // Delete any entity
     @PostMapping("/delete-course/{id}")
@@ -358,12 +213,4 @@ public String addSubject(@RequestParam Long classId,
         return "redirect:/admin/manage-courses";
     }
 
-
-
-
-   
-
-   
-    
 }
-

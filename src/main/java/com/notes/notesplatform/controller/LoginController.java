@@ -80,16 +80,16 @@ public class LoginController {
         return "redirect:/index";
     }
 
-    // Helper method to create the cookie
+    
     private void issueToken(String email, HttpServletResponse response) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         String token = jwtService.generateToken(userDetails);
 
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false); // Set to true if using HTTPS on Render
+        jwtCookie.setSecure(false); 
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(3600 * 10); // 10 hours
+        jwtCookie.setMaxAge(3600 * 10); 
         response.addCookie(jwtCookie);
     }
 
@@ -97,7 +97,7 @@ public class LoginController {
     public String logout(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(0); // Deletes the cookie
+        jwtCookie.setMaxAge(0); 
         response.addCookie(jwtCookie);
         SecurityContextHolder.clearContext();
         return "redirect:/index";

@@ -30,27 +30,24 @@ public class SubjectController {
         return subjectRepository.findAll();
     }
 
-   
-
-
     @PostMapping
-public Subject createSubject(
-        @RequestParam(required = false) Long classId,
-        @RequestParam(required = false) Long courseId,
-        @RequestBody Subject subject) {
+    public Subject createSubject(
+            @RequestParam(required = false) Long classId,
+            @RequestParam(required = false) Long courseId,
+            @RequestBody Subject subject) {
 
-    if (classId != null) {
-        ClassEntity classEntity = classRepository.findById(classId)
-                .orElseThrow(() -> new RuntimeException("Class not found with id: " + classId));
-        subject.setClassEntity(classEntity);
-    } else if (courseId != null) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
-        subject.setCourse(course);
-    } else {
-        throw new RuntimeException("Either classId or courseId must be provided.");
+        if (classId != null) {
+            ClassEntity classEntity = classRepository.findById(classId)
+                    .orElseThrow(() -> new RuntimeException("Class not found with id: " + classId));
+            subject.setClassEntity(classEntity);
+        } else if (courseId != null) {
+            Course course = courseRepository.findById(courseId)
+                    .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
+            subject.setCourse(course);
+        } else {
+            throw new RuntimeException("Either classId or courseId must be provided.");
+        }
+
+        return subjectRepository.save(subject);
     }
-
-    return subjectRepository.save(subject);
-}
 }

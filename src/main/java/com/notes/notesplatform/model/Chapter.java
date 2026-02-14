@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.BatchSize;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Chapter {
 
     @Id
@@ -20,16 +20,16 @@ public class Chapter {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
-    @JsonIgnore   // prevents circular reference
+    @JsonIgnore
     private Subject subject;
 
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore   // notes loaded via separate endpoint
+    @JsonIgnore
     private List<Note> notes;
 
-    // Constructors
-    public Chapter() {}
+    public Chapter() {
+    }
 
     public Chapter(String name, Subject subject) {
         this.name = name;

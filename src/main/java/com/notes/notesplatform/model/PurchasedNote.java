@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "purchased_note")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class PurchasedNote {
 
     @Id
@@ -16,12 +16,12 @@ public class PurchasedNote {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore   // prevent circular reference
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "note_id", nullable = false)
-    @JsonIgnore   // prevent deep serialization
+    @JsonIgnore
     private Note note;
 
     private LocalDateTime purchasedAt;
@@ -93,4 +93,3 @@ public class PurchasedNote {
         this.purchased = purchased;
     }
 }
-

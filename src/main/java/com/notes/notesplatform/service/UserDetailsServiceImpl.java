@@ -15,23 +15,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
-        @Override
-public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+        String role = user.getRole();
+        if (role == null || role.trim().isEmpty()) {
+            role = "USER";
+        }
 
-    String role = user.getRole();
-    if (role == null || role.trim().isEmpty()) {
-        role = "USER";
+        String finalRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+
+        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
+                .password(user.getPassword())
+                .authorities(finalRole)
+                .build();
     }
-
-   
-    String finalRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
-
-    return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
-            .password(user.getPassword())
-            .authorities(finalRole) 
-            .build();
-}
 }

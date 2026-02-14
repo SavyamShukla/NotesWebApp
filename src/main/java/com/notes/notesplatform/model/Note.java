@@ -25,7 +25,7 @@ public class Note {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chapter_id")
-    @JsonIgnore   // prevents circular reference
+    @JsonIgnore   
     private Chapter chapter;
 
     public Note() {}

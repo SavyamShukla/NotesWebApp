@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @EntityScan("com.notes.notesplatform.model") 
-@EnableJpaRepositories("com.notes.notesplatform.repository") // Added this line to scan for repositories
+@EnableJpaRepositories("com.notes.notesplatform.repository") 
 public class NotesplatformApplication {
 
     public static void main(String[] args) {

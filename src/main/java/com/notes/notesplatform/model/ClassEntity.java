@@ -8,7 +8,7 @@ import java.util.List;
 import org.hibernate.annotations.BatchSize;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ClassEntity {
 
     @Id
@@ -21,7 +21,7 @@ public class ClassEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    @JsonIgnore   
+    @JsonIgnore
     private Course course;
 
     @BatchSize(size = 10)
@@ -29,25 +29,20 @@ public class ClassEntity {
     @OneToMany(mappedBy = "classEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Subject> subjects;
 
-    // Constructors
-    public ClassEntity() {}
+    public ClassEntity() {
+    }
 
     public ClassEntity(String name, Course course) {
         this.name = name;
         this.course = course;
     }
 
+    @Column(name = "class_order")
+    private Integer classOrder;
 
-
-    // In com.notes.notesplatform.model.ClassEntity
-@Column(name = "class_order")
-private Integer classOrder;
-
-public void setClassOrder(Integer classOrder) {
-    this.classOrder = classOrder;
-}
-
-    // Getters and Setters
+    public void setClassOrder(Integer classOrder) {
+        this.classOrder = classOrder;
+    }
 
     public Long getId() {
         return id;

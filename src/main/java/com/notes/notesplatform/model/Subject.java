@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.BatchSize;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Subject {
 
     @Id
@@ -20,39 +20,37 @@ public class Subject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "class_id", nullable = true)
-    @JsonIgnore   
+    @JsonIgnore
     private ClassEntity classEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
-    @JsonIgnore   
+    @JsonIgnore
     private Course course;
 
     @BatchSize(size = 10)
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore   
+    @JsonIgnore
     private List<Chapter> chapters;
 
-    // Constructors
-    public Subject() {}
+    public Subject() {
+    }
 
     public Subject(String name, ClassEntity classEntity) {
         this.name = name;
         this.classEntity = classEntity;
     }
 
+    @Column(name = "subject_order")
+    private Integer subjectOrder;
 
-    // In com.notes.notesplatform.model.Subject
-@Column(name = "subject_order")
-private Integer subjectOrder; // This matches the @OrderColumn name
+    public Integer getSubjectOrder() {
+        return subjectOrder;
+    }
 
-public Integer getSubjectOrder() {
-    return subjectOrder;
-}
-
-public void setSubjectOrder(Integer subjectOrder) {
-    this.subjectOrder = subjectOrder;
-}
+    public void setSubjectOrder(Integer subjectOrder) {
+        this.subjectOrder = subjectOrder;
+    }
 
     // Getters and Setters
 
