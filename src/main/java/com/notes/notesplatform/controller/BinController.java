@@ -5,6 +5,7 @@ import com.notes.notesplatform.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -148,13 +149,16 @@ public List<Map<String, Object>> getDeletedNotes() {
     }
 
     @DeleteMapping("/permanent/{type}/{id}")
-public ResponseEntity<?> permanentlyDelete(
-        @PathVariable String type,
-        @PathVariable Long id) {
+    @Transactional
+public ResponseEntity<?> permanentlyDelete(@PathVariable String type, @PathVariable Long id) {
 
     switch (type.toLowerCase()) {
-
-        case "courses" -> courseRepository.deleteById(id);
+        case "courses" -> {
+            Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+            courseRepository.delete(course);
+        }
+        
         case "classes" -> classRepository.deleteById(id);
         case "subjects" -> subjectRepository.deleteById(id);
         case "chapters" -> chapterRepository.deleteById(id);
