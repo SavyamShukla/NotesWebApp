@@ -106,7 +106,7 @@ public String createCourse(@ModelAttribute Course course) {
 }*/
 
 
-@PostMapping("/new-course")
+/*@PostMapping("/new-course")
     public String createCourse(@ModelAttribute Course course, 
                                @RequestParam(value = "noteFiles", required = false) List<MultipartFile> noteFiles) {
         
@@ -139,7 +139,7 @@ public String createCourse(@ModelAttribute Course course) {
         return "redirect:/admin/manage-courses";
     }
 
-   /*  private void processChapters(List<Chapter> chapters, List<MultipartFile> files, int[] index) {
+   / private void processChapters(List<Chapter> chapters, List<MultipartFile> files, int[] index) {
         if (chapters != null) {
             for (Chapter chapter : chapters) {
                 if (chapter.getNotes() != null) {
@@ -159,6 +159,53 @@ public String createCourse(@ModelAttribute Course course) {
             }
         }
     }*/
+
+
+    @PostMapping("/new-course")
+public String createCourse(@ModelAttribute Course course, 
+                           @RequestParam(value = "noteFiles", required = false) List<MultipartFile> noteFiles) {
+    
+    final int[] fileIndex = {0};
+
+    // 1. Handle hierarchy with direct subjects
+    if (course.getSubjects() != null) {
+        List<Subject> subjects = course.getSubjects();
+        for (int i = 0; i < subjects.size(); i++) {
+            Subject subject = subjects.get(i);
+            subject.setCourse(course);
+            subject.setSubjectOrder(i); // Assign sequential order to prevent NULL index crash
+            processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
+        }
+    }
+
+    // 2. Handle hierarchy with classes
+    if (course.getClasses() != null) {
+        List<ClassEntity> classes = course.getClasses();
+        for (int i = 0; i < classes.size(); i++) {
+            ClassEntity classEntity = classes.get(i);
+            classEntity.setCourse(course);
+            classEntity.setClassOrder(i); // Assign sequential order for classes
+            
+            if (classEntity.getSubjects() != null) {
+                List<Subject> classSubjects = classEntity.getSubjects();
+                for (int j = 0; j < classSubjects.size(); j++) {
+                    Subject subject = classSubjects.get(j);
+                    subject.setClassEntity(classEntity);
+                    subject.setCourse(course); 
+                    subject.setSubjectOrder(j); // Assign sequential order within the class context
+                    processChapters(subject, subject.getChapters(), noteFiles, fileIndex);
+                }
+            }
+        }
+    }
+
+    courseRepository.save(course);
+    return "redirect:/admin/manage-courses";
+}
+
+
+
+
    private void processChapters(Subject subject, List<Chapter> chapters, List<MultipartFile> files, int[] index) {
     if (chapters != null) {
         for (Chapter chapter : chapters) {
