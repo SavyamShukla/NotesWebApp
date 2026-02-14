@@ -8,6 +8,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -37,12 +38,23 @@ public class StorageService {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         // Initialize the S3 Client specifically for Supabase
-        S3Client s3Client = S3Client.builder()
+        /*S3Client s3Client = S3Client.builder()
                 .endpointOverride(URI.create(endpoint))
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create(accessKey, secretKey)))
-                .build();
+                .build();*/
+
+        S3Client s3Client = S3Client.builder()
+        .endpointOverride(URI.create(endpoint))
+        .region(Region.of(region))
+        .credentialsProvider(StaticCredentialsProvider.create(
+                AwsBasicCredentials.create(accessKey, secretKey)))
+        // ADD THIS SECTION TO FIX THE CHECKSUM ERROR
+        .serviceConfiguration(S3Configuration.builder()
+                .checksumValidationEnabled(false)
+                .build())
+        .build();
 
         // Build the upload request
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
