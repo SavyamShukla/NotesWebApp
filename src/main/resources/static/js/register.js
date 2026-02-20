@@ -123,7 +123,27 @@ sendOtpBtn.addEventListener("click", async () => {
         sendOtpBtn.textContent = originalText;
         showPopup([{ text: "Network error", duration: 2000, done: true }]);
     }
+
 });
+
+
+function startCooldownTimer(button, seconds) {
+    if (!button) return;
+    
+    button.disabled = true;
+    const originalText = button.innerText;
+    
+    const interval = setInterval(() => {
+        seconds--;
+        button.innerText = `Wait ${seconds}s`;
+        
+        if (seconds <= 0) {
+            clearInterval(interval);
+            button.disabled = false;
+            button.innerText = originalText;
+        }
+    }, 1000);
+}
 
     // Verify OTP
     verifyOtpBtn.addEventListener("click", () => {
