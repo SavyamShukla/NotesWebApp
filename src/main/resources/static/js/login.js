@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => statusPopup.classList.add("hidden"), delay);
     }
 
-    async function sendOtpRequest(url, email) {
+    /*async function sendOtpRequest(url, email) {
         showPopup("Verifying email...");
         try {
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -76,7 +76,64 @@ document.addEventListener("DOMContentLoaded", () => {
             popupText.innerText = "Error sending OTP.";
             hidePopup(2000);
         }
+    }*/
+
+       async function sendOtpRequest(url, email, buttonId) {
+    const btn = document.getElementById(buttonId);
+    showPopup("Verifying email...");
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        popupText.innerText = "Sending OTP...";
+
+        const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `email=${encodeURIComponent(email)}`, 
+            redirect: "follow"
+        });
+
+        const responseText = await res.text();
+
+        if (!res.ok) {
+            // If it's a cooldown error (429), the message is "Please wait X seconds..."
+            throw new Error(responseText);
+        }
+
+        popupText.innerText = "OTP sent!";
+        startCooldownTimer(btn, 60); // Start 60s cooldown on success
+        hidePopup(1500);
+
+    } catch (err) {
+        popupText.innerText = err.message;
+        
+        // Check if the error message contains a number to sync the button timer
+        const match = err.message.match(/\d+/);
+        if (match) {
+            startCooldownTimer(btn, parseInt(match[0]));
+        }
+        
+        hidePopup(3000);
     }
+}
+
+function startCooldownTimer(button, seconds) {
+    if (!button) return;
+    
+    button.disabled = true;
+    const originalText = button.innerText;
+    
+    const interval = setInterval(() => {
+        seconds--;
+        button.innerText = `Wait ${seconds}s`;
+        
+        if (seconds <= 0) {
+            clearInterval(interval);
+            button.disabled = false;
+            button.innerText = originalText;
+        }
+    }, 1000);
+}
 
     // Login OTP handler
     document.getElementById("send-otp").addEventListener("click", () => {
