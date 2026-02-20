@@ -49,7 +49,7 @@ public ResponseEntity<String> sendOtp(@RequestParam("email") String email) {
     }
     
     try {
-        otpService.generateOtp(email);
+        otpService.generateOtp(email, "register");
         return ResponseEntity.ok("sent");
     } catch (RuntimeException e) {
         // Returns the cooldown message to the frontend

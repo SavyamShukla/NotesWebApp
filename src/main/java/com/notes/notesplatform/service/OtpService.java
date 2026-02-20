@@ -147,7 +147,7 @@ public class OtpService {
         }
     }
 
-    public String generateOtp(String email) {
+    public String generateOtp(String email, String type) {
         // --- COOLDOWN CHECK ---
         OtpData existingData = otpStorage.get(email);
         if (existingData != null && existingData.getSecondsSinceLastSent() < COOLDOWN_SECONDS) {
@@ -155,13 +155,15 @@ public class OtpService {
             throw new RuntimeException("Please wait " + waitTime + " seconds before requesting a new OTP.");
         }
 
+      
+
         String otp = String.format("%06d", new Random().nextInt(1000000));
         otpStorage.put(email, new OtpData(otp, EXPIRE_MINUTES));
 
         System.out.println("[OtpService] OTP generated for " + email + ": " + otp);
 
         try {
-            emailService.sendOtpEmail(email, otp);
+            emailService.sendOtpEmail(email, otp, type);
         } catch (Exception e) {
             System.err.println("[OtpService] Email error: " + e.getMessage());
         }

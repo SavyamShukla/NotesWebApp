@@ -137,7 +137,7 @@ public ResponseEntity<String> sendForgotPasswordOtp(@RequestParam("email") Strin
 
     try {
         // 2. Attempt to generate and send OTP
-        otpService.generateOtp(email);
+        otpService.generateOtp(email, "reset");
         
         // Return 200 OK for success
         return ResponseEntity.ok("OTP sent to your email.");
@@ -203,7 +203,7 @@ public ResponseEntity<String> sendLoginOtp(@RequestParam("email") String email) 
     Optional<User> userOpt = userRepository.findByEmail(email);
     if (userOpt.isPresent()) {
         try {
-            otpService.generateOtp(email);
+            otpService.generateOtp(email, "login");
             return ResponseEntity.ok("OTP Sent");
         } catch (RuntimeException e) {
             // Returns: "Please wait X seconds..."
