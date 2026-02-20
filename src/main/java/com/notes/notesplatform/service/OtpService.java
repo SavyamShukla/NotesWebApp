@@ -1,57 +1,6 @@
 /*package com.notes.notesplatform.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-
-
-
-@Service
-public class OtpService {
-
-    // Using ConcurrentHashMap for better thread safety in a web environment
-    private final Map<String, String> otpStorage = new ConcurrentHashMap<>();
-
-    @Autowired
-    private EmailService emailService;
-
-    
-
-    public String generateOtp(String email) {
-        // Generate a 6-digit random number
-        String otp = String.format("%06d", new Random().nextInt(1000000));
-        otpStorage.put(email, otp);
-
-        System.out.println("[OtpService] Generated OTP for " + email + ": " + otp);
-
-        // Send the email via the HTTP-based EmailService
-        emailService.sendOtpEmail(email, otp);
-
-        return otp;
-    }
-
-    public boolean validateOtp(String email, String otp) {
-        String storedOtp = otpStorage.get(email);
-        boolean isValid = storedOtp != null && storedOtp.equals(otp);
-        
-        System.out.println("[OtpService] Validating OTP for " + email + ": " + (isValid ? "SUCCESS" : "FAILED"));
-        return isValid;
-    }
-
-    public void clearOtp(String email) {
-        otpStorage.remove(email);
-        System.out.println("[OtpService] Cleared OTP for " + email);
-    }
-}*/
-
-
-package com.notes.notesplatform.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +21,7 @@ public class OtpService {
 
     /**
      * Internal helper class to store OTP with its expiration time.
-     */
+     /
     private static class OtpData {
         private final String otp;
         private final long expiryTimestamp;
@@ -145,7 +94,7 @@ public class OtpService {
     /**
      * Background task: Runs every 10 minutes to remove "ghost" OTPs 
      * from users who never attempted to validate.
-     */
+     /
     @Scheduled(fixedRate = 600000) 
     public void cleanUpExpiredOtps() {
         int initialSize = otpStorage.size();
@@ -155,5 +104,92 @@ public class OtpService {
         if (removedCount > 0) {
             System.out.println("[OtpService] Cleanup Task: Removed " + removedCount + " expired OTPs from memory.");
         }
+    }
+}*/
+
+
+package com.notes.notesplatform.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Service
+public class OtpService {
+
+    private final Map<String, OtpData> otpStorage = new ConcurrentHashMap<>();
+    
+    private static final long EXPIRE_MINUTES = 5;
+    private static final long COOLDOWN_SECONDS = 60; // User must wait 60s to resend
+
+    @Autowired
+    private EmailService emailService;
+
+    private static class OtpData {
+        private final String otp;
+        private final long expiryTimestamp;
+        private final long lastSentTimestamp;
+
+        public OtpData(String otp, long durationInMinutes) {
+            this.otp = otp;
+            this.lastSentTimestamp = System.currentTimeMillis();
+            this.expiryTimestamp = System.currentTimeMillis() + (durationInMinutes * 60 * 1000);
+        }
+
+        public String getOtp() { return otp; }
+        public boolean isExpired() { return System.currentTimeMillis() > expiryTimestamp; }
+        public long getSecondsSinceLastSent() {
+            return (System.currentTimeMillis() - lastSentTimestamp) / 1000;
+        }
+    }
+
+    public String generateOtp(String email) {
+        // --- COOLDOWN CHECK ---
+        OtpData existingData = otpStorage.get(email);
+        if (existingData != null && existingData.getSecondsSinceLastSent() < COOLDOWN_SECONDS) {
+            long waitTime = COOLDOWN_SECONDS - existingData.getSecondsSinceLastSent();
+            throw new RuntimeException("Please wait " + waitTime + " seconds before requesting a new OTP.");
+        }
+
+        String otp = String.format("%06d", new Random().nextInt(1000000));
+        otpStorage.put(email, new OtpData(otp, EXPIRE_MINUTES));
+
+        System.out.println("[OtpService] OTP generated for " + email + ": " + otp);
+
+        try {
+            emailService.sendOtpEmail(email, otp);
+        } catch (Exception e) {
+            System.err.println("[OtpService] Email error: " + e.getMessage());
+        }
+
+        return otp;
+    }
+
+    public boolean validateOtp(String email, String otp) {
+        OtpData data = otpStorage.get(email);
+
+        if (data == null || data.isExpired()) {
+            if (data != null) otpStorage.remove(email);
+            return false;
+        }
+
+        boolean isValid = data.getOtp().equals(otp);
+        if (isValid) otpStorage.remove(email); 
+        
+        return isValid;
+    }
+
+    public void clearOtp(String email) {
+        otpStorage.remove(email);
+        System.out.println("[OtpService] Manually cleared OTP for " + email);
+    }
+
+    @Scheduled(fixedRate = 600000) 
+    public void cleanUpExpiredOtps() {
+        otpStorage.entrySet().removeIf(entry -> entry.getValue().isExpired());
     }
 }

@@ -43,13 +43,28 @@ public class EmailService {
         requestBody.put("sender", sender);
         requestBody.put("to", List.of(recipient)); 
         requestBody.put("subject", "Your OTP Code - NotesPortal");
-        requestBody.put("htmlContent", 
-            "<html><body>" +
-            "<h2>Your OTP is: <span style='color:blue;'>" + otp + "</span></h2>" +
-            "<p>This OTP is valid for 5 minutes. Do not share it with anyone.</p>" +
-            "</body></html>"
-        );
-
+        String htmlTemplate = 
+            "<div style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>" +
+                "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'>" +
+                    "<div style='background-color: #2563eb; padding: 20px; text-align: center;'>" +
+                        "<h1 style='color: #ffffff; margin: 0; font-size: 24px;'>NotesPortal</h1>" +
+                    "</div>" +
+                    "<div style='padding: 30px; text-align: center;'>" +
+                        "<h2 style='color: #333333;'>Verification Code</h2>" +
+                        "<p style='color: #666666; font-size: 16px;'>Please use the following One-Time Password (OTP) to complete your login. This code is valid for <b>5 minutes</b>.</p>" +
+                        "<div style='margin: 30px 0;'>" +
+                            "<span style='display: inline-block; background-color: #f3f4f6; color: #2563eb; font-size: 36px; font-weight: bold; letter-spacing: 5px; padding: 15px 30px; border-radius: 5px; border: 1px dashed #2563eb;'>" +
+                                otp +
+                            "</span>" +
+                        "</div>" +
+                        "<p style='color: #999999; font-size: 12px;'>If you did not request this code, please ignore this email or contact support.</p>" +
+                    "</div>" +
+                    "<div style='background-color: #f9fafb; padding: 15px; text-align: center; color: #9ca3af; font-size: 12px;'>" +
+                        "&copy; 2026 NotesPortal. All rights reserved." +
+                    "</div>" +
+                "</div>" +
+            "</div>";
+        requestBody.put("htmlContent", htmlTemplate);
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {

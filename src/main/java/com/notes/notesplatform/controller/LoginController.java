@@ -7,6 +7,8 @@ import com.notes.notesplatform.service.OtpService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -103,7 +105,7 @@ public class LoginController {
         return "redirect:/index";
     }
 
-
+/*
      @PostMapping("/forgot-password/send-otp")
 public String sendForgotPasswordOtp(@RequestParam("email") String email, Model model) {
     Optional<User> userOpt = userRepository.findByEmail(email);
@@ -119,6 +121,32 @@ public String sendForgotPasswordOtp(@RequestParam("email") String email, Model m
     model.addAttribute("message", "OTP sent to your email. Enter OTP and new password.");
     return "login";
 } 
+*/
+
+@PostMapping("/forgot-password/send-otp")
+public String sendForgotPasswordOtp(@RequestParam("email") String email, Model model) {
+    Optional<User> userOpt = userRepository.findByEmail(email);
+
+    if (userOpt.isEmpty()) {
+        model.addAttribute("error", "User not found. Please register first.");
+        return "login";
+    }
+
+    try {
+        otpService.generateOtp(email);
+        model.addAttribute("message", "OTP sent to your email. Enter OTP and new password.");
+    } catch (RuntimeException e) {
+        // Adds the "Please wait X seconds" message to the UI
+        model.addAttribute("error", e.getMessage());
+    }
+
+    model.addAttribute("forgotPasswordMode", true);
+    model.addAttribute("email", email);
+    return "login";
+}
+
+
+
 
 @PostMapping("/forgot-password/reset")
 public String resetPassword(@RequestParam("email") String email,
@@ -152,7 +180,7 @@ public String resetPassword(@RequestParam("email") String email,
            URLEncoder.encode(message, StandardCharsets.UTF_8);
 }
 
-@PostMapping("/send-login-otp")
+/*@PostMapping("/send-login-otp")
 @ResponseBody 
 public String sendLoginOtp(@RequestParam("email") String email) {
     Optional<User> userOpt = userRepository.findByEmail(email);
@@ -162,6 +190,24 @@ public String sendLoginOtp(@RequestParam("email") String email) {
     }
     return "User not found";
 }
+*/
+
+@PostMapping("/send-login-otp")
+@ResponseBody 
+public ResponseEntity<String> sendLoginOtp(@RequestParam("email") String email) {
+    Optional<User> userOpt = userRepository.findByEmail(email);
+    if (userOpt.isPresent()) {
+        try {
+            otpService.generateOtp(email);
+            return ResponseEntity.ok("OTP Sent");
+        } catch (RuntimeException e) {
+            // Returns: "Please wait X seconds..."
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
+        }
+    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+}
+
 
 @GetMapping("/reset-result")
 public String showResetResult(@RequestParam("message") String message,

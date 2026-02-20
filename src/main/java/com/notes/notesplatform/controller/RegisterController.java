@@ -4,6 +4,8 @@ import com.notes.notesplatform.model.User;
 import com.notes.notesplatform.repository.UserRepository;
 import com.notes.notesplatform.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,7 @@ public class RegisterController {
         return "register";
     }
 
-    @PostMapping("/register/send-otp")
+   /* @PostMapping("/register/send-otp")
     @ResponseBody
     public String sendOtp(@RequestParam("email") String email) {
         Optional<User> existing = userRepository.findByEmail(email);
@@ -36,7 +38,24 @@ public class RegisterController {
         }
         otpService.generateOtp(email);
         return "sent";
+    }*/
+
+        @PostMapping("/register/send-otp")
+@ResponseBody
+public ResponseEntity<String> sendOtp(@RequestParam("email") String email) {
+    Optional<User> existing = userRepository.findByEmail(email);
+    if (existing.isPresent()) {
+        return ResponseEntity.ok("exists");
     }
+    
+    try {
+        otpService.generateOtp(email);
+        return ResponseEntity.ok("sent");
+    } catch (RuntimeException e) {
+        // Returns the cooldown message to the frontend
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
+    }
+}
 
     @PostMapping("/register/verify-otp")
     @ResponseBody
