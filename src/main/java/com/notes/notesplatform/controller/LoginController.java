@@ -152,6 +152,17 @@ public String resetPassword(@RequestParam("email") String email,
            URLEncoder.encode(message, StandardCharsets.UTF_8);
 }
 
+@PostMapping("/send-login-otp")
+@ResponseBody 
+public String sendLoginOtp(@RequestParam("email") String email) {
+    Optional<User> userOpt = userRepository.findByEmail(email);
+    if (userOpt.isPresent()) {
+        otpService.generateOtp(email); // This calls your EmailService
+        return "OTP Sent";
+    }
+    return "User not found";
+}
+
 @GetMapping("/reset-result")
 public String showResetResult(@RequestParam("message") String message,
                               @RequestParam("success") boolean success,
