@@ -13,6 +13,8 @@
 <body>
 
 
+
+
     <header class="navbar">
         <div class="logo">NotesPortal</div>
         <nav class="nav-links">
@@ -35,6 +37,11 @@
             <img src="/images/person-icon.png" alt="Profile">
         </div>
     </header>
+
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; font-family: sans-serif;">
+    <div class="spinner"></div>
+    <p style="margin-top: 15px; font-weight: bold;">Processing Payment... Please wait.</p>
+</div>
 
     <main class="chapters-container">
         <h1 class="page-title">Notes</h1>
@@ -106,7 +113,7 @@
 
 
 
-        window.payForNote = async function (button) {
+       /* window.payForNote = async function (button) {
 
 
             const noteId = Number(button.getAttribute('data-note-id'));
@@ -189,7 +196,95 @@
             });
 
             rzp.open();
+        }*/
+
+        window.payForNote = async function (button) {
+    const overlay = document.getElementById('loading-overlay');
+    
+    // 1. Show the loading overlay
+    overlay.style.display = 'flex';
+
+    try {
+        const noteId = Number(button.getAttribute('data-note-id'));
+        const noteTitle = button.getAttribute('data-note-title');
+
+        const response = await fetch('/payment/create_order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ noteId })
+        });
+
+        if (!response.ok) {
+            overlay.style.display = 'none'; // Hide if failed
+            showAlert('Could not create payment order. Please try again.', 'error');
+            return;
         }
+
+        const orderData = await response.json();
+
+        const options = {
+            key: razorpaykey,
+            amount: orderData.amount,
+            currency: "INR",
+            name: "NotesPortal",
+            description: "Purchase: " + noteTitle,
+            order_id: orderData.id,
+            modal: {
+                ondismiss: function() {
+                    // Hide overlay if user closes the Razorpay popup
+                    overlay.style.display = 'none';
+                }
+            },
+            handler: async function (response) {
+                // Keep overlay visible during verification
+                const verificationResponse = await fetch('/payment/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_signature: response.razorpay_signature,
+                        noteId: noteId
+                    })
+                });
+
+                const verificationResult = await verificationResponse.json();
+                overlay.style.display = 'none'; // Finally hide it
+
+                if (verificationResult.status === 'success') {
+                    showAlert('Payment successful! You can now download the note.', 'success');
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    showAlert('Payment verification failed. Please contact support.', 'error');
+                }
+            },
+            prefill: {
+                name: currentUser.name,
+                email: currentUser.email
+            },
+            theme: { color: "#3399cc" }
+        };
+
+        const rzp = new Razorpay(options);
+        
+        // 2. Hide overlay when the Razorpay modal actually opens
+        rzp.on('payment.failed', function (response) {
+            overlay.style.display = 'none';
+            showAlert('Payment failed: ' + response.error.description, 'error');
+        });
+
+        rzp.open();
+        
+        // Optional: Hide overlay shortly after rzp.open() 
+        // because the Razorpay UI is now visible.
+        setTimeout(() => { overlay.style.display = 'none'; }, 1500);
+
+    } catch (error) {
+        overlay.style.display = 'none';
+        console.error(error);
+        showAlert('An unexpected error occurred.', 'error');
+    }
+}
 
 
         function showAlert(message, type = 'info') {
