@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
    // Send OTP
-sendOtpBtn.addEventListener("click", () => {
+/*sendOtpBtn.addEventListener("click", () => {
     const email = document.getElementById("email").value;
 
     if (!email) {
@@ -67,6 +67,62 @@ sendOtpBtn.addEventListener("click", () => {
             sendOtpBtn.textContent = originalText;
             showPopup([{ text: "Network error", duration: 2000, done: true }]);
         });
+});*/
+
+
+sendOtpBtn.addEventListener("click", async () => {
+    const email = document.getElementById("email").value;
+
+    if (!email) {
+        showPopup([{ text: "Please enter an email", duration: 2000, done: true }]);
+        return;
+    }
+
+    const originalText = sendOtpBtn.textContent;
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Processing...";
+
+    showPopup([{ text: "Verifying Email...", duration: 1500 }]);
+
+    try {
+        const res = await fetch("/register/send-otp?email=" + encodeURIComponent(email), { method: "POST" });
+        const responseText = await res.text();
+
+        if (res.ok) {
+            if (responseText === "exists") {
+                showPopup([{ text: "Email already registered!", duration: 2000, done: true }]);
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.textContent = originalText;
+            } else {
+                // Success case: OTP Sent
+                showPopup([
+                    { text: "Generating OTP...", duration: 1000 },
+                    { text: "Sending OTP...", duration: 1000 },
+                    { text: "OTP Sent!", duration: 1500, done: true }
+                ]);
+                otpSection.classList.remove("hidden");
+                
+                // Optional: Start a 60s cooldown timer on the button
+                startCooldownTimer(sendOtpBtn, 60); 
+            }
+        } else {
+            // This handles 429 (Cooldown) and other errors
+            showPopup([{ text: responseText, duration: 3000, done: true }]);
+            
+            // If it's a cooldown, sync the button timer
+            const match = responseText.match(/\d+/);
+            if (match) {
+                startCooldownTimer(sendOtpBtn, parseInt(match[0]));
+            } else {
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.textContent = originalText;
+            }
+        }
+    } catch (error) {
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.textContent = originalText;
+        showPopup([{ text: "Network error", duration: 2000, done: true }]);
+    }
 });
 
     // Verify OTP
