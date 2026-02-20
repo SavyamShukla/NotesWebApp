@@ -80,7 +80,7 @@ sendOtpBtn.addEventListener("click", async () => {
 
     const originalText = sendOtpBtn.textContent;
     sendOtpBtn.disabled = true;
-    sendOtpBtn.textContent = "Processing...";
+    //sendOtpBtn.textContent = "Processing...";
 
     showPopup([{ text: "Verifying Email...", duration: 1500 }]);
 
