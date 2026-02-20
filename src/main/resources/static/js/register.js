@@ -80,7 +80,7 @@ sendOtpBtn.addEventListener("click", async () => {
 
     const originalText = sendOtpBtn.textContent;
     sendOtpBtn.disabled = true;
-    //sendOtpBtn.textContent = "Processing...";
+    sendOtpBtn.textContent = "Processing..."
 
     showPopup([{ text: "Verifying Email...", duration: 1500 }]);
 
@@ -103,6 +103,7 @@ sendOtpBtn.addEventListener("click", async () => {
                 otpSection.classList.remove("hidden");
                 
                 // Optional: Start a 60s cooldown timer on the button
+                sendOtpBtn.textContent = originalText;
                 startCooldownTimer(sendOtpBtn, 60); 
             }
         } else {
