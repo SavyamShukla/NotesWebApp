@@ -124,25 +124,30 @@ public String sendForgotPasswordOtp(@RequestParam("email") String email, Model m
 */
 
 @PostMapping("/forgot-password/send-otp")
-public String sendForgotPasswordOtp(@RequestParam("email") String email, Model model) {
+@ResponseBody // Important: This ensures we return text, not a Thymeleaf page
+public ResponseEntity<String> sendForgotPasswordOtp(@RequestParam("email") String email) {
+    // 1. Check if user exists
     Optional<User> userOpt = userRepository.findByEmail(email);
 
     if (userOpt.isEmpty()) {
-        model.addAttribute("error", "User not found. Please register first.");
-        return "login";
+        // Return 404 so JavaScript triggers the error popup
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                             .body("User not found. Please register first.");
     }
 
     try {
+        // 2. Attempt to generate and send OTP
         otpService.generateOtp(email);
-        model.addAttribute("message", "OTP sent to your email. Enter OTP and new password.");
+        
+        // Return 200 OK for success
+        return ResponseEntity.ok("OTP sent to your email.");
+        
     } catch (RuntimeException e) {
-        // Adds the "Please wait X seconds" message to the UI
-        model.addAttribute("error", e.getMessage());
+        // 3. Handle Cooldown (Wait 60s)
+        // Returns 429 status + the "Please wait X seconds" message
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                             .body(e.getMessage());
     }
-
-    model.addAttribute("forgotPasswordMode", true);
-    model.addAttribute("email", email);
-    return "login";
 }
 
 
