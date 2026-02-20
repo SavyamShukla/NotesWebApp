@@ -32,9 +32,7 @@
         <!-- OTP Login -->
         <form id="otp-login" class="login-form hidden" method="POST" action="/login-with-otp">
             <input type="email" name="email" placeholder="Email" required>
-           <button id="loginOtpBtn" onclick="sendOtpRequest('/send-login-otp', document.getElementById('email').value, 'loginOtpBtn')">
-    Send OTP
-</button>
+            <button type="button" id="send-otp" class="btn send-otp-btn">Send OTP</button>
             <input type="text" name="otp" placeholder="Enter OTP" required>
             <button type="submit" class="btn login-submit-btn">Login with OTP</button>
         </form>
