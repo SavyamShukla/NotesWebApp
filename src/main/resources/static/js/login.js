@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const forgotModal = document.getElementById("forgot-modal");
     const backBtn = document.getElementById("back-btn");
     const togglePasswordIcons = document.querySelectorAll(".toggle-password");
-    const sendLoginBtn = document.getElementById("send-otp")
-    const sendForgotPassBtn = document.getElementById("forgot-send-otp")
+   
 
     // Toggle between Password and OTP login
     passwordBtn.addEventListener("click", () => {
@@ -144,7 +143,7 @@ function startCooldownTimer(button, seconds) {
             alert("Please enter your email first.");
             return;
         }
-        sendOtpRequest("/send-login-otp", email, sendLoginBtn );
+        sendOtpRequest("/send-login-otp", email, "send-otp" );
     });
 
     // Forgot Password OTP handler
@@ -154,6 +153,6 @@ function startCooldownTimer(button, seconds) {
             alert("Please enter your email first.");
             return;
         }
-        sendOtpRequest("/forgot-password/send-otp", email, sendForgotPassBtn);
+        sendOtpRequest("/forgot-password/send-otp", email, "forgot-send-otp");
     });
 });
