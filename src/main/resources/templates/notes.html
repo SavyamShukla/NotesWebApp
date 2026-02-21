@@ -16,27 +16,51 @@
 
 
     <header class="navbar">
-        <div class="logo">NotesPortal</div>
-        <nav class="nav-links">
-            <div class="upper-links">
-                <a href="/">Home</a>
-                <a href="/#motive">Our Motive</a>
-                <a href="/#contact">Contact</a>
-            </div>
-            <div class="lower-link">
-                <a sec:authorize="!isAuthenticated()" href="/login" class="btn-login">Login</a>
-                <a sec:authorize="isAuthenticated()" href="/logout" class="btn-logout">Logout</a>
-            </div>
-        </nav>
+    <a href="/" class="logo">NotesPortal</a>
+    
+    <ul class="nav-links desktop-nav">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#motive">Our Motive</a></li>
+    <li><a href="#contact">Contact</a></li>
 
-        <div class="profile-icon inactive" sec:authorize="!isAuthenticated()">
-            <img src="/images/person-icon.png" alt="Profile">
-        </div>
+    <th:block sec:authorize="!isAuthenticated()">
+        <li><a href="/login" class="btn-login">Login</a></li>
+        <li class="profile-link-li">
+            <div class="profile-icon-placeholder">
+                <img src="/images/person-icon.png" alt="Profile">
+            </div>
+        </li>
+    </th:block>
 
-        <div class="profile-icon active" sec:authorize="isAuthenticated()" onclick="window.location.href='/dashboard'">
-            <img src="/images/person-icon.png" alt="Profile">
+    <th:block sec:authorize="isAuthenticated()">
+        <li><a href="/logout" class="btn-logout">Logout</a></li>
+        <li class="profile-link-li">
+            <a href="/dashboard" class="profile-link">
+                <img src="/images/person-icon.png" alt="Profile">
+            </a>
+        </li>
+    </th:block>
+</ul>
+
+    <div class="mobile-nav-container">
+        <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="mobile-profile-icon">
+            <img src="/images/person-icon.png" alt="Login">
+        </a>
+
+        <div class="dropdown-wrapper" sec:authorize="isAuthenticated()">
+            <button class="mobile-profile-icon" id="mobileProfileBtn">
+                <img src="/images/person-icon.png" alt="Profile">
+            </button>
+            <ul class="mobile-dropdown" id="mobileDropdown">
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#motive">Our Motive</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
         </div>
-    </header>
+    </div>
+</header>
 
     <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; font-family: sans-serif;">
     <div class="spinner"></div>
