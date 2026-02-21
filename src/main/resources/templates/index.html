@@ -93,25 +93,28 @@
     <a href="/" class="logo">NotesPortal</a>
     
     <ul class="nav-links desktop-nav">
-        <ul>
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#motive">Our Motive</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li sec:authorize="!isAuthenticated()"><a href="/login" class="btn-login">Login</a></li>
-        <li sec:authorize="isAuthenticated()"><a href="/logout" class="btn-logout">Logout</a></li>
-        <li sec:authorize="isAuthenticated()" class="profile-link-li">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#motive">Our Motive</a></li>
+    <li><a href="#contact">Contact</a></li>
+
+    <th:block sec:authorize="!isAuthenticated()">
+        <li><a href="/login" class="btn-login">Login</a></li>
+        <li class="profile-link-li">
+            <div class="profile-icon-placeholder">
+                <img src="/images/person-icon.png" alt="Profile">
+            </div>
+        </li>
+    </th:block>
+
+    <th:block sec:authorize="isAuthenticated()">
+        <li><a href="/logout" class="btn-logout">Logout</a></li>
+        <li class="profile-link-li">
             <a href="/dashboard" class="profile-link">
                 <img src="/images/person-icon.png" alt="Profile">
             </a>
         </li>
-        </ul>
-        <ul>
-
-        <li class="profile-icon-placeholder" sec:authorize="!isAuthenticated()">
-        <img src="/images/person-icon.png" alt="Profile">
-        </li>
-    </ul>
-    </ul>
+    </th:block>
+</ul>
 
     <div class="mobile-nav-container">
         <a th:href="@{/login}" sec:authorize="!isAuthenticated()" class="mobile-profile-icon">
