@@ -24,10 +24,12 @@ public class Course {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "subject_order")
+    @BatchSize(size=10)
     private List<Subject> subjects = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn(name = "class_order")
+    @BatchSize(size=10)
     private List<ClassEntity> classes = new ArrayList<>();
 
     // Getters and Setters
