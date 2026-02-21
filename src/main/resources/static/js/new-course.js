@@ -405,7 +405,7 @@ function gatherFormDetails() {
     const hasClasses = document.querySelector('input[name="hasClasses"]:checked').value === 'yes';
     let details = `<h3>Course Name:</h3> ${name}<br><h3>Structure:</h3> ${hasClasses ? 'By Class' : 'Direct Subjects'}<br><br>`;
     
-    // Simplification for preview: count total files
+    
     const fileCount = document.querySelectorAll('input[type="file"]').length;
     details += `<strong>Total Files Selected:</strong> ${fileCount} PDFs<br>`;
     

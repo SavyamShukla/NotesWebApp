@@ -16,7 +16,7 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    opacity: 0.5; /* Make it look inactive */
+    opacity: 0.5; 
 }
 
 /* HIDE MOBILE ELEMENTS BY DEFAULT (FOR LAPTOP) */

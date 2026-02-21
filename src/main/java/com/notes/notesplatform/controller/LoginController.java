@@ -41,8 +41,8 @@ public class LoginController {
 
     @GetMapping("/login")
     public String showLoginPage(@RequestParam(value = "email", required = false) String email,
-                                @RequestParam(value = "useOtp", required = false) Boolean useOtp,
-                                Model model) {
+            @RequestParam(value = "useOtp", required = false) Boolean useOtp,
+            Model model) {
         model.addAttribute("email", email);
         model.addAttribute("useOtp", useOtp != null && useOtp);
         return "login";
@@ -50,9 +50,9 @@ public class LoginController {
 
     @PostMapping("/login-with-password")
     public String loginWithPassword(@RequestParam("email") String email,
-                                    @RequestParam("password") String password,
-                                    HttpServletResponse response,
-                                    Model model) {
+            @RequestParam("password") String password,
+            HttpServletResponse response,
+            Model model) {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
@@ -66,9 +66,9 @@ public class LoginController {
 
     @PostMapping("/login-with-otp")
     public String loginWithOtp(@RequestParam("email") String email,
-                               @RequestParam("otp") String otp,
-                               HttpServletResponse response,
-                               Model model) {
+            @RequestParam("otp") String otp,
+            HttpServletResponse response,
+            Model model) {
 
         if (!otpService.validateOtp(email, otp)) {
             model.addAttribute("error", "Invalid or expired OTP.");
@@ -82,146 +82,105 @@ public class LoginController {
         return "redirect:/index";
     }
 
-    
     private void issueToken(String email, HttpServletResponse response) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         String token = jwtService.generateToken(userDetails);
 
         Cookie jwtCookie = new Cookie("jwt", token);
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false); 
+        jwtCookie.setSecure(false);
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(3600 * 10); 
+        jwtCookie.setMaxAge(3600 * 10);
         response.addCookie(jwtCookie);
     }
 
-   @GetMapping("/logout")
+    @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge(0); 
+        jwtCookie.setMaxAge(0);
         response.addCookie(jwtCookie);
         SecurityContextHolder.clearContext();
         return "redirect:/index";
     }
 
-/*
-     @PostMapping("/forgot-password/send-otp")
-public String sendForgotPasswordOtp(@RequestParam("email") String email, Model model) {
-    Optional<User> userOpt = userRepository.findByEmail(email);
+    @PostMapping("/forgot-password/send-otp")
+    @ResponseBody
+    public ResponseEntity<String> sendForgotPasswordOtp(@RequestParam("email") String email) {
 
-    if (userOpt.isEmpty()) {
-        model.addAttribute("error", "User not found. Please register first.");
-        return "login";
-    }
+        Optional<User> userOpt = userRepository.findByEmail(email);
 
-    otpService.generateOtp(email);
-    model.addAttribute("forgotPasswordMode", true);
-    model.addAttribute("email", email);
-    model.addAttribute("message", "OTP sent to your email. Enter OTP and new password.");
-    return "login";
-} 
-*/
+        if (userOpt.isEmpty()) {
 
-@PostMapping("/forgot-password/send-otp")
-@ResponseBody // Important: This ensures we return text, not a Thymeleaf page
-public ResponseEntity<String> sendForgotPasswordOtp(@RequestParam("email") String email) {
-    // 1. Check if user exists
-    Optional<User> userOpt = userRepository.findByEmail(email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found. Please register first.");
+        }
 
-    if (userOpt.isEmpty()) {
-        // Return 404 so JavaScript triggers the error popup
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                             .body("User not found. Please register first.");
-    }
-
-    try {
-        // 2. Attempt to generate and send OTP
-        otpService.generateOtp(email, "reset");
-        
-        // Return 200 OK for success
-        return ResponseEntity.ok("OTP sent to your email.");
-        
-    } catch (RuntimeException e) {
-        // 3. Handle Cooldown (Wait 60s)
-        // Returns 429 status + the "Please wait X seconds" message
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
-                             .body(e.getMessage());
-    }
-}
-
-
-
-
-@PostMapping("/forgot-password/reset")
-public String resetPassword(@RequestParam("email") String email,
-                            @RequestParam("otp") String otp,
-                            @RequestParam("newPassword") String newPassword,
-                            Model model) {
-
-    
-    if (!otpService.validateOtp(email, otp)) {
-        String message = "Invalid or expired OTP for " + email + ". Please try again.";
-        return "redirect:/reset-result?success=false&message=" + 
-               URLEncoder.encode(message, StandardCharsets.UTF_8);
-    }
-
-    
-    Optional<User> userOpt = userRepository.findByEmail(email);
-    if (userOpt.isEmpty()) {
-        String message = "User with email " + email + " not found.";
-        return "redirect:/reset-result?success=false&message=" + 
-               URLEncoder.encode(message, StandardCharsets.UTF_8);
-    }
-
-    
-    User user = userOpt.get();
-    user.setPassword(passwordEncoder.encode(newPassword));
-    userRepository.save(user);
-    otpService.clearOtp(email);
-
-    String message = "Password for " + email + " updated successfully. You can now login with your new password.";
-    return "redirect:/reset-result?success=true&message=" + 
-           URLEncoder.encode(message, StandardCharsets.UTF_8);
-}
-
-/*@PostMapping("/send-login-otp")
-@ResponseBody 
-public String sendLoginOtp(@RequestParam("email") String email) {
-    Optional<User> userOpt = userRepository.findByEmail(email);
-    if (userOpt.isPresent()) {
-        otpService.generateOtp(email); // This calls your EmailService
-        return "OTP Sent";
-    }
-    return "User not found";
-}
-*/
-
-@PostMapping("/send-login-otp")
-@ResponseBody 
-public ResponseEntity<String> sendLoginOtp(@RequestParam("email") String email) {
-    Optional<User> userOpt = userRepository.findByEmail(email);
-    if (userOpt.isPresent()) {
         try {
-            otpService.generateOtp(email, "login");
-            return ResponseEntity.ok("OTP Sent");
+
+            otpService.generateOtp(email, "reset");
+
+            return ResponseEntity.ok("OTP sent to your email.");
+
         } catch (RuntimeException e) {
-            // Returns: "Please wait X seconds..."
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(e.getMessage());
         }
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-}
 
+    @PostMapping("/forgot-password/reset")
+    public String resetPassword(@RequestParam("email") String email,
+            @RequestParam("otp") String otp,
+            @RequestParam("newPassword") String newPassword,
+            Model model) {
 
-@GetMapping("/reset-result")
-public String showResetResult(@RequestParam("message") String message,
-                              @RequestParam("success") boolean success,
-                              Model model) {
-    model.addAttribute("message", message);
-    model.addAttribute("success", success);
-    return "reset-result";
-}
-    
-   
+        if (!otpService.validateOtp(email, otp)) {
+            String message = "Invalid or expired OTP for " + email + ". Please try again.";
+            return "redirect:/reset-result?success=false&message=" +
+                    URLEncoder.encode(message, StandardCharsets.UTF_8);
+        }
+
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            String message = "User with email " + email + " not found.";
+            return "redirect:/reset-result?success=false&message=" +
+                    URLEncoder.encode(message, StandardCharsets.UTF_8);
+        }
+
+        User user = userOpt.get();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        otpService.clearOtp(email);
+
+        String message = "Password for " + email + " updated successfully. You can now login with your new password.";
+        return "redirect:/reset-result?success=true&message=" +
+                URLEncoder.encode(message, StandardCharsets.UTF_8);
+    }
+
+    @PostMapping("/send-login-otp")
+    @ResponseBody
+    public ResponseEntity<String> sendLoginOtp(@RequestParam("email") String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            try {
+                otpService.generateOtp(email, "login");
+                return ResponseEntity.ok("OTP Sent");
+            } catch (RuntimeException e) {
+
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
+
+    @GetMapping("/reset-result")
+    public String showResetResult(@RequestParam("message") String message,
+            @RequestParam("success") boolean success,
+            Model model) {
+        model.addAttribute("message", message);
+        model.addAttribute("success", success);
+        return "reset-result";
+    }
+
 }

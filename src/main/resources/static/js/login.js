@@ -56,28 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => statusPopup.classList.add("hidden"), delay);
     }
 
-    /*async function sendOtpRequest(url, email) {
-        showPopup("Verifying email...");
-        try {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            popupText.innerText = "Sending OTP...";
-
-            const res = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `email=${encodeURIComponent(email)}`, redirect: "follow"
-            });
-
-            if(!res.ok){
-                throw new Error(`Server returned ${res.status}`);
-            }
-            popupText.innerText = "OTP sent!";
-            hidePopup(1500);
-        } catch (err) {
-            popupText.innerText = "Error sending OTP.";
-            hidePopup(2000);
-        }
-    }*/
+    
 
        async function sendOtpRequest(url, email, buttonId) {
     const btn = document.getElementById(buttonId);

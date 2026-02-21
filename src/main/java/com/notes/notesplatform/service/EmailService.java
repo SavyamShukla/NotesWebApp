@@ -23,20 +23,20 @@ public class EmailService {
     public void sendOtpEmail(String to, String otp, String type) {
         RestTemplate restTemplate = new RestTemplate();
 
-        // 1. Set Headers
+        
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("api-key", brevoApiKey);
 
-        // 2. Construct Request Body
+        
         Map<String, Object> requestBody = new HashMap<>();
 
-        // Sender Info
+        
         Map<String, String> sender = new HashMap<>();
         sender.put("email", senderEmail);
         sender.put("name", "NotesPortal");
 
-        // Recipient Info (Brevo expects an array/list of recipients)
+        
         Map<String, String> recipient = new HashMap<>();
         recipient.put("email", to);
 

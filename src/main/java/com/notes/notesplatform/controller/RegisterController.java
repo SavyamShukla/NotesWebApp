@@ -29,33 +29,22 @@ public class RegisterController {
         return "register";
     }
 
-   /* @PostMapping("/register/send-otp")
+    @PostMapping("/register/send-otp")
     @ResponseBody
-    public String sendOtp(@RequestParam("email") String email) {
+    public ResponseEntity<String> sendOtp(@RequestParam("email") String email) {
         Optional<User> existing = userRepository.findByEmail(email);
         if (existing.isPresent()) {
-            return "exists";
+            return ResponseEntity.ok("exists");
         }
-        otpService.generateOtp(email);
-        return "sent";
-    }*/
 
-        @PostMapping("/register/send-otp")
-@ResponseBody
-public ResponseEntity<String> sendOtp(@RequestParam("email") String email) {
-    Optional<User> existing = userRepository.findByEmail(email);
-    if (existing.isPresent()) {
-        return ResponseEntity.ok("exists");
+        try {
+            otpService.generateOtp(email, "register");
+            return ResponseEntity.ok("sent");
+        } catch (RuntimeException e) {
+            // Returns the cooldown message to the frontend
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
+        }
     }
-    
-    try {
-        otpService.generateOtp(email, "register");
-        return ResponseEntity.ok("sent");
-    } catch (RuntimeException e) {
-        // Returns the cooldown message to the frontend
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
-    }
-}
 
     @PostMapping("/register/verify-otp")
     @ResponseBody
@@ -70,8 +59,8 @@ public ResponseEntity<String> sendOtp(@RequestParam("email") String email) {
     @PostMapping("/register/complete")
     @ResponseBody
     public String completeRegistration(@RequestParam("email") String email,
-                                       @RequestParam("name") String name,
-                                       @RequestParam("password") String password) {
+            @RequestParam("name") String name,
+            @RequestParam("password") String password) {
         if (userRepository.findByEmail(email).isPresent()) {
             return "exists";
         }

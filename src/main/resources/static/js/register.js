@@ -26,48 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         nextStep();
     }
 
-   // Send OTP
-/*sendOtpBtn.addEventListener("click", () => {
-    const email = document.getElementById("email").value;
-
-    if (!email) {
-        showPopup([{ text: "Please enter an email", duration: 2000, done: true }]);
-        return;
-    }
-
-    sendOtpBtn.disabled = true;
-    const originalText = sendOtpBtn.textContent;
-    sendOtpBtn.textContent = "Processing...";
-
-    // Show verifying email popup first
-    showPopup([{ text: "Verifying Email...", duration: 1500 }]);
-
-    fetch("/register/send-otp?email=" + encodeURIComponent(email), { method: "POST" })
-        .then(res => res.text())
-        .then(response => {
-            sendOtpBtn.disabled = false;
-            sendOtpBtn.textContent = originalText;
-
-            if (response === "exists") {
-                showPopup([{ text: "Email already registered!", duration: 2000, done: true }]);
-            } else if (response === "sent") {
-                // Only proceed if backend confirms OTP was sent
-                showPopup([
-                    { text: "Generating OTP...", duration: 1500 },
-                    { text: "Sending OTP...", duration: 2000 },
-                    { text: "OTP Sent!", duration: 1500, done: true }
-                ]);
-                otpSection.classList.remove("hidden");
-            } else {
-                showPopup([{ text: "Error sending OTP", duration: 2000, done: true }]);
-            }
-        })
-        .catch(() => {
-            sendOtpBtn.disabled = false;
-            sendOtpBtn.textContent = originalText;
-            showPopup([{ text: "Network error", duration: 2000, done: true }]);
-        });
-});*/
+  
 
 
 sendOtpBtn.addEventListener("click", async () => {
