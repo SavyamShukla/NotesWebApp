@@ -131,6 +131,12 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f5f7fa; colo
 .nav-links { display: flex; align-items: center; gap: 30px; list-style: none; margin: 0; padding: 0; }
 .nav-links a { color: #fff; text-decoration: none; transition: color 0.3s ease; }
 .profile-link img { width: 40px; height: 40px; border-radius: 50%; }
+.profile-icon-placeholder img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    opacity: 0.5; /* Make it look inactive */
+}
 
 /* HIDE MOBILE ELEMENTS BY DEFAULT (FOR LAPTOP) */
 .mobile-nav-container { display: none; }
