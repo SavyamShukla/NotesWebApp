@@ -408,19 +408,7 @@
 
                 <div class="note-actions">
                     <div sec:authorize="isAuthenticated()">
-                            <div th:with="currentUrl=${secureUrls.get(note.id)}">
-                                <a th:if="${currentUrl != null}"
-                                   th:href="${currentUrl}"
-                                   target="_blank" 
-                                   class="btn-open unlocked"
-                                   download>
-                                   Download Notes 📄
-                                </a>
-                                <span th:if="${currentUrl == null}" class="text-danger">
-                                    Link Error (Private)
-                                </span>
-                            </div>
-                        <!--
+                        
                         <div th:if="${note.free} or ${userHasNote.get(note.id)}">
                             <div th:with="currentUrl=${secureUrls.get(note.id)}">
                                 <a th:if="${currentUrl != null}"
@@ -430,11 +418,12 @@
                                    download>
                                    Download Notes 📄
                                 </a>
+                                
                                 <span th:if="${currentUrl == null}" class="text-danger">
-                                    Link Error (Private)
+                                    Link is Private, Purchase the Note
                                 </span>
                             </div>
-                        </div>-->
+                        </div>
 
                         <div th:if="${!note.free} and !${userHasNote.get(note.id)}">
                             <button type="button" class="btn-open pay-button"
