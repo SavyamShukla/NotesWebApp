@@ -99,15 +99,15 @@
 </a>
                         </div>-->
                         <div th:if="${note.free} or ${userHasNote.get(note.id)}">
-    <a th:if="${secureUrl != null}"
-       th:href="${secureUrl}"
+    <a th:if="${secureUrls != null}"
+       th:href="${secureUrls}"
        target="_blank" 
        class="btn-open unlocked"
        download>
        Download Securely ⬇️
     </a>
     
-    <span th:if="${secureUrl == null}" class="text-danger">
+    <span th:if="${secureUrls == null}" class="text-danger">
         Unable to generate link. Please refresh.
     </span>
 </div>
@@ -131,15 +131,15 @@
    class="btn-open unlocked">
    View Notes 📄
 </a>-->
-<a th:if="${secureUrl != null}"
-       th:href="${secureUrl}"
+<a th:if="${secureUrls != null}"
+       th:href="${secureUrls}"
        target="_blank" 
        class="btn-open unlocked"
        download>
        Download Securely ⬇️
     </a>
     
-    <span th:if="${secureUrl == null}" class="text-danger">
+    <span th:if="${secureUrls == null}" class="text-danger">
         Unable to generate link. Please refresh.
     </span>
 
