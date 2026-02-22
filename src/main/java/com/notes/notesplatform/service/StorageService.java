@@ -67,7 +67,7 @@ private String serviceRoleKey;
                 s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
 
                 return fileName;
-        }*
+        }*/
        public String uploadFile(MultipartFile file) throws IOException {
 
     String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -98,7 +98,7 @@ private String serviceRoleKey;
     return filePath;  // ✅ RETURN FULL PATH
 }
 
-        public String getSignedUrl(String fileName) {
+     /*   public String getSignedUrl(String fileName) {
     // 1. Define the Supabase Signing Endpoint
     String endpoint = supabaseBaseUrl + "/storage/v1/object/sign/" + bucketName + "/" + fileName;
 
