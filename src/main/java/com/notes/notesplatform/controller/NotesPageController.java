@@ -107,6 +107,7 @@ public class NotesPageController {
                     boolean purchased =
 purchasedNoteRepository
 .existsByUserIdAndNoteId(user.getId(), note.getId());
+userHasNote.put(note.getId(), purchased);
 System.out.println("USER ID: " + user.getId()
     + " NOTE ID: " + note.getId()
     + " PURCHASED: " + purchased);
