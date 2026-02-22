@@ -49,11 +49,7 @@ public class AdminController {
        // return allUsers;
     //}
 
-    @GetMapping("/users")
-    public List<User> ShowUserList(){
-        return userRepository.findAll();
-    }
-
+    
     // New course page
     @GetMapping("/new-course")
     public String showNewCourseForm(Model model) {

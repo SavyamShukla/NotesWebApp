@@ -131,8 +131,16 @@ public class DashboardController {
     // ==============================
     @GetMapping("/admin/dashboard")
     public String adminDashboard() {
+       
+
         return "admindashboard";
     }
+     @GetMapping("/users")
+     public String UserList(Model model, Principal principal){
+        List <User> User= userRepository.findAll();
+        model.addAttribute("User", User);
+        return "adminDashboard";
+     }
 
     // ==============================
     // USER DASHBOARD

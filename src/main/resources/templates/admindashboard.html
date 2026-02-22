@@ -48,6 +48,15 @@
                 <p>Restore or permanently delete removed items.</p>
             </div>
         </section>
+
+        <section class="users">
+            <div th:each="user:${User}" class="card">
+                <ul>
+                    <li th:text="${user.name}"></li>
+                    <li th:text="${user.email}"></li>
+                </ul>
+            </div>
+        </section>
     </main>
 </div>
 </body>
