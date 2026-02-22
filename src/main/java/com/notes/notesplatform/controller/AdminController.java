@@ -99,8 +99,8 @@ public class AdminController {
 
                         if (files != null && index[0] < files.size() && !files.get(index[0]).isEmpty()) {
                             try {
-                                String fileName = storageService.uploadFile(files.get(index[0]++));
-                                note.setFileUrl(fileName);
+                                String filePath = storageService.uploadFile(files.get(index[0]++));
+                                note.setFileUrl(filePath);
                             } catch (Exception e) {
 
                                 if (e.getMessage().contains("base 16")) {
@@ -173,8 +173,8 @@ public class AdminController {
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
         try {
-            String fileName = storageService.uploadFile(file);
-            Note note = new Note(title, fileName, price, isFree, chapter);
+            String filePath = storageService.uploadFile(file);
+            Note note = new Note(title, filePath, price, isFree, chapter);
             noteRepository.save(note);
         } catch (Exception e) {
             throw new RuntimeException("Single upload failed", e);

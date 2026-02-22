@@ -43,7 +43,7 @@ private String supabaseBaseUrl;
 @Value("${supabase.service-role-key}")
 private String serviceRoleKey;
 
-        public String uploadFile(MultipartFile file) throws IOException {
+       /*  public String uploadFile(MultipartFile file) throws IOException {
 
                 String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
@@ -67,7 +67,36 @@ private String serviceRoleKey;
                 s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
 
                 return fileName;
-        }
+        }*/
+       public String uploadFile(MultipartFile file) throws IOException {
+
+    String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+    // 👇 THIS IS IMPORTANT (Folder Path)
+    String filePath = "notes/" + uniqueFileName;
+
+    S3Client s3Client = S3Client.builder()
+            .endpointOverride(URI.create(endpoint))
+            .region(Region.of(region))
+            .credentialsProvider(
+                    StaticCredentialsProvider.create(
+                            AwsBasicCredentials.create(accessKey, secretKey)))
+            .serviceConfiguration(
+                    S3Configuration.builder()
+                            .checksumValidationEnabled(false)
+                            .build())
+            .build();
+
+    PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucketName)
+            .key(filePath)   // ✅ NOW FULL PATH
+            .contentType(file.getContentType())
+            .build();
+
+    s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+
+    return filePath;  // ✅ RETURN FULL PATH
+}
 
         public String getSignedUrl(String fileName) {
     // 1. Define the Supabase Signing Endpoint
