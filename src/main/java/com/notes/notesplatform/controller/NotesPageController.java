@@ -107,6 +107,9 @@ public class NotesPageController {
                     boolean purchased =
 purchasedNoteRepository
 .existsByUserIdAndNoteId(user.getId(), note.getId());
+System.out.println("USER ID: " + user.getId()
+    + " NOTE ID: " + note.getId()
+    + " PURCHASED: " + purchased);
 
                     // 3. Generate Signed URL only if the user has access
                     if (note.isFree() || purchased) {
