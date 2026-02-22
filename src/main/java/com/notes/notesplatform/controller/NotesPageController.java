@@ -127,7 +127,8 @@ purchasedNoteRepository
 
         model.addAttribute("notes", notes);
         model.addAttribute("userHasNote", userHasNote);
-        model.addAttribute("secureUrls", secureUrls); // 4. Pass URLs to the UI
+        model.addAttribute("secureUrls", secureUrls);
+        System.out.println(secureUrls); // 4. Pass URLs to the UI
         model.addAttribute("razorpayKey", razorpayKeyId);
         return "notes";
     }
