@@ -67,7 +67,7 @@ private String serviceRoleKey;
                 s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
 
                 return fileName;
-        }*/
+        }*
        public String uploadFile(MultipartFile file) throws IOException {
 
     String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -125,6 +125,56 @@ private String serviceRoleKey;
     } catch (Exception e) {
         System.err.println("Error generating signed URL: " + e.getMessage());
     }
+    return null;
+}*/
+
+
+public String getSignedUrl(String filePath) {
+
+    String endpoint = supabaseBaseUrl
+            + "/storage/v1/object/sign/"
+            + bucketName + "/"
+            + filePath;
+
+    RestTemplate restTemplate = new RestTemplate();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", "Bearer " + serviceRoleKey);
+    headers.set("Content-Type", "application/json");
+
+    // ✅ VERY IMPORTANT UPDATED BODY
+    String requestBody = """
+    {
+        "expiresIn": 900,
+        "transform": null
+    }
+    """;
+
+    HttpEntity<String> request =
+            new HttpEntity<>(requestBody, headers);
+
+    try {
+
+        ResponseEntity<Map> response =
+                restTemplate.postForEntity(
+                        endpoint,
+                        request,
+                        Map.class
+                );
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+
+            String signedPath =
+                    (String) response.getBody().get("signedURL");
+
+            return supabaseBaseUrl + signedPath;
+        }
+
+    } catch (Exception e) {
+        System.out.println("SIGNED URL ERROR: "
+                + e.getMessage());
+    }
+
     return null;
 }
 }
