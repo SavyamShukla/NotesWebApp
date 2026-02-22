@@ -17,5 +17,7 @@ public interface PurchasedNoteRepository extends JpaRepository<PurchasedNote, Lo
     @Query("SELECT pn FROM PurchasedNote pn JOIN FETCH pn.note WHERE pn.user = :user")
     List<PurchasedNote> findByUserWithNotes(@Param("user") User user);
 
-    boolean existsByUserAndNote(User user, Note note);
+    //boolean existsByUserAndNote(User user, Note note);
+
+    boolean existsByUserIdAndNoteId(Long userId, Long noteId);
 }
