@@ -10,7 +10,9 @@ import com.notes.notesplatform.model.Course;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-    //@EntityGraph(attributePaths = { "subjects", "classes" })
+    @EntityGraph(attributePaths = { "subjects", "classes" })
+    List<Course> findAllByDeletedFalse();
+
     List<Course> findByDeletedFalse();
 
     @EntityGraph(attributePaths = { "subjects", "classes" })

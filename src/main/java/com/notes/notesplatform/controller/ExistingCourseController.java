@@ -42,7 +42,7 @@ public class ExistingCourseController {
     @GetMapping("/all")
     @ResponseBody
     public List<Course> getAllCourses() {
-        return courseRepository.findByDeletedFalseForAdmin();
+        return courseRepository.findAllByDeletedFalse();
     }
 
     @GetMapping("/{id}")
