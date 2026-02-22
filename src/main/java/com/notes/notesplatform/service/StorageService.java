@@ -146,7 +146,7 @@ public String getSignedUrl(String filePath) {
     String requestBody = """
     {
         "expiresIn": 900,
-        "transform": null
+        "transform": {}
     }
     """;
 
