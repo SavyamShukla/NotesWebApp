@@ -167,7 +167,7 @@ public String getSignedUrl(String filePath) {
             String signedPath =
                     (String) response.getBody().get("signedURL");
 
-            return supabaseBaseUrl + signedPath;
+            return supabaseBaseUrl + "/storage/v1" + signedPath;
         }
 
     } catch (Exception e) {
