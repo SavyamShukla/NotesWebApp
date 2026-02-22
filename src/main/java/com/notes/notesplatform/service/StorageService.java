@@ -15,6 +15,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
 
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.*;
+import java.util.Map;
+
 @Service
 public class StorageService {
 
@@ -32,6 +36,12 @@ public class StorageService {
 
         @Value("${supabase.s3.secret-key}")
         private String secretKey;
+
+        @Value("${supabase.url}")
+private String supabaseBaseUrl;
+
+@Value("${supabase.service-role-key}")
+private String serviceRoleKey;
 
         public String uploadFile(MultipartFile file) throws IOException {
 
@@ -58,4 +68,34 @@ public class StorageService {
 
                 return fileName;
         }
+
+        public String getSignedUrl(String fileName) {
+    // 1. Define the Supabase Signing Endpoint
+    String endpoint = supabaseBaseUrl + "/storage/v1/object/sign/" + bucketName + "/" + fileName;
+
+    RestTemplate restTemplate = new RestTemplate();
+
+    // 2. Set the Security Headers using the Service Role Key
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", "Bearer " + serviceRoleKey);
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    // 3. Set how long the link lasts (e.g., 15 minutes)
+    Map<String, Object> body = Map.of("expiresIn", 900);
+    HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+    try {
+        // 4. Request the Signed URL
+        ResponseEntity<Map> response = restTemplate.postForEntity(endpoint, request, Map.class);
+        
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String signedPath = (String) response.getBody().get("signedURL");
+            // 5. Combine with the base URL to get the full "Security Link"
+            return supabaseBaseUrl + signedPath;
+        }
+    } catch (Exception e) {
+        System.err.println("Error generating signed URL: " + e.getMessage());
+    }
+    return null;
+}
 }

@@ -89,12 +89,28 @@
                 <div class="note-actions">
                     <div sec:authorize="isAuthenticated()">
 
-                        <div th:if="${note.isFree} or ${userHasNote.get(note.id)}">
-                            <a th:href="@{'https://lksdahsyqqcmrvcjyxkn.supabase.co/storage/v1/object/public/BucketForNotes/' + ${note.fileUrl}}"
-                                class="btn-open unlocked" target="_blank" download>
-                                Download PDF
-                            </a>
-                        </div>
+                       <!-- <div th:if="${note.isFree} or ${userHasNote.get(note.id)}">
+                            <a th:if="${note.free}"
+   th:with="supabaseUrl=@{'https://lksdahsyqqcmrvcjyxkn.supabase.co/storage/v1/object/public/BucketForNotes/' + ${note.fileUrl}}"
+   th:href="'https://docs.google.com/viewer?url=' + ${supabaseUrl} + '&embedded=true'"
+   target="_blank" 
+   class="btn-open unlocked">
+   View Notes 📄
+</a>
+                        </div>-->
+                        <div th:if="${note.free} or ${userHasNote.get(note.id)}">
+    <a th:if="${secureUrl != null}"
+       th:href="${secureUrl}"
+       target="_blank" 
+       class="btn-open unlocked"
+       download>
+       Download Securely ⬇️
+    </a>
+    
+    <span th:if="${secureUrl == null}" class="text-danger">
+        Unable to generate link. Please refresh.
+    </span>
+</div>
 
 
                         <div th:if="${!note.free} and !${userHasNote.get(note.id)}">
@@ -108,13 +124,24 @@
                     </div>
 
                     <div sec:authorize="!isAuthenticated()">
-                        <a th:if="${note.free}"
+                        <!--<a th:if="${note.free}"
    th:with="supabaseUrl=@{'https://lksdahsyqqcmrvcjyxkn.supabase.co/storage/v1/object/public/BucketForNotes/' + ${note.fileUrl}}"
    th:href="'https://docs.google.com/viewer?url=' + ${supabaseUrl} + '&embedded=true'"
    target="_blank" 
    class="btn-open unlocked">
    View Notes 📄
-</a>
+</a>-->
+<a th:if="${secureUrl != null}"
+       th:href="${secureUrl}"
+       target="_blank" 
+       class="btn-open unlocked"
+       download>
+       Download Securely ⬇️
+    </a>
+    
+    <span th:if="${secureUrl == null}" class="text-danger">
+        Unable to generate link. Please refresh.
+    </span>
 
 <a th:unless="${note.free}" 
    href="/login" 
