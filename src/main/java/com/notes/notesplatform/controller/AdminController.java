@@ -38,7 +38,21 @@ public class AdminController {
     private NoteRepository noteRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private StorageService storageService;
+
+    //@GetMapping("/users")
+    //public  ShowUserList(){
+      //  List<User> allUsers= userRepository.findAll();
+       // return allUsers;
+    //}
+
+    @GetMapping("/users")
+    public List<User> ShowUserList(){
+        return userRepository.findAll();
+    }
 
     // New course page
     @GetMapping("/new-course")
