@@ -139,7 +139,7 @@ public class DashboardController {
      public String UserList(Model model, Principal principal){
         List <User> User= userRepository.findAll();
         model.addAttribute("User", User);
-        return "userlist";
+        return "admindashboard";
      }
 
     // ==============================
