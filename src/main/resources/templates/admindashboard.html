@@ -97,6 +97,7 @@
 
         <!-- 3 main card buttons -->
         <section id="dashboard"  class="content-section">
+            <div class="card-section">
             <div class="card" onclick="window.location.href='/existing-courses'">
                 <h3>Existing Courses</h3>
                 <p>View and manage all available courses.</p>
@@ -111,9 +112,11 @@
                 <h3>Bin (Deleted Files)</h3>
                 <p>Restore or permanently delete removed items.</p>
             </div>
+            </div>
         </section>
 
         <section  id="users" class="content-section" style="display: none">
+        
             <div th:each="user:${User}" >
                 <div class="card">
                     <span th:text="${user.name}"></span>
