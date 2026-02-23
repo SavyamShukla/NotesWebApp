@@ -96,7 +96,7 @@
         </header>
 
         <!-- 3 main card buttons -->
-        <section id="dashboard"  class="card-section">
+        <section id="dashboard"  class="content-section">
             <div class="card" onclick="window.location.href='/existing-courses'">
                 <h3>Existing Courses</h3>
                 <p>View and manage all available courses.</p>
@@ -113,10 +113,11 @@
             </div>
         </section>
 
-        <section  id="users" class="card-section" style="display: none">
+        <section  id="users" class="content-section" style="display: none">
             <div th:each="user:${User}" >
                 <div class="card">
                     <span th:text="${user.name}"></span>
+                    :
                     <span th:text="${user.email}"></span>
                 </div>
             </div>
