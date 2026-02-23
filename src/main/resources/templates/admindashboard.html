@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="dashboard-container">
-    <!-- Sidebar -->
+    <!-- Sidebar ->
     <aside class="sidebar">
         <div class="sidebar-header">
             <h2>Admin Panel</h2>
@@ -24,14 +24,14 @@
         </nav>
     </aside>
 
-    <!-- Main content -->
+    <!-- Main content ->
     <main class="main-content">
         <header class="main-header">
             <h1>Welcome, Admin</h1>
             <p>Manage your platform from one place</p>
         </header>
 
-        <!-- 3 main card buttons -->
+        <!-- 3 main card buttons ->
         <section class="card-section">
             <div class="card" onclick="window.location.href='/existing-courses'">
                 <h3>Existing Courses</h3>
@@ -60,4 +60,75 @@
     </main>
 </div>
 </body>
+</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/admin/dashboard"  class="nav-link active" data-target="dashboard">Dashboard</a>
+            <a href="/admin/users"  class="nav-link" data-target="users">Users</a>
+            
+            <a href="/admin/payments"  class="nav-link" data-target="payments">Payments</a>
+           
+            
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <header class="main-header">
+            <h1>Welcome, Admin</h1>
+            <p>Manage your platform from one place</p>
+        </header>
+
+        <!-- 3 main card buttons -->
+        <section id="dashboard"  class="card-section">
+            <div class="card" onclick="window.location.href='/existing-courses'">
+                <h3>Existing Courses</h3>
+                <p>View and manage all available courses.</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='/admin/new-course'">
+                <h3>New Course</h3>
+                <p>Create and upload a new course for users.</p>
+            </div>
+
+            <div class="card" onclick="window.location.href='/bin'">
+                <h3>Bin (Deleted Files)</h3>
+                <p>Restore or permanently delete removed items.</p>
+            </div>
+        </section>
+
+        <section  id="users" class="card-section" style="display: none">
+            <div th:each="user:${User}" >
+                <div class="card">
+                    <span th:text="${user.name}"></span>
+                    <span th:text="${user.email}"></span>
+                </div>
+            </div>
+        </section>
+
+        <section id="payments" class="content-section" style="display: none;">
+            <h1>Payment History</h1>
+            <p>Recent transactions and invoices...</p>
+        </section>
+    </main>
+</div>
+<script src="/js/admin-dashboard.js"></script>
+</body>
 </html>
+

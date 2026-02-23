@@ -22,7 +22,7 @@
 
         <section class="users">
             <div th:each="user:${User}" class="card">
-                <ul>
+                <ul class="list-card">
                     <li th:text="${user.name}"></li>
                     <li th:text="${user.email}"></li>
                 </ul>
