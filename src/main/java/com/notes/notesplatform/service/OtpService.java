@@ -12,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OtpService {
 
     private final Map<String, OtpData> otpStorage = new ConcurrentHashMap<>();
-    
+
     private static final long EXPIRE_MINUTES = 5;
-    private static final long COOLDOWN_SECONDS = 60; // User must wait 60s to resend
+    private static final long COOLDOWN_SECONDS = 60;
 
     @Autowired
     private EmailService emailService;
@@ -30,22 +30,26 @@ public class OtpService {
             this.expiryTimestamp = System.currentTimeMillis() + (durationInMinutes * 60 * 1000);
         }
 
-        public String getOtp() { return otp; }
-        public boolean isExpired() { return System.currentTimeMillis() > expiryTimestamp; }
+        public String getOtp() {
+            return otp;
+        }
+
+        public boolean isExpired() {
+            return System.currentTimeMillis() > expiryTimestamp;
+        }
+
         public long getSecondsSinceLastSent() {
             return (System.currentTimeMillis() - lastSentTimestamp) / 1000;
         }
     }
 
     public String generateOtp(String email, String type) {
-        // --- COOLDOWN CHECK ---
+
         OtpData existingData = otpStorage.get(email);
         if (existingData != null && existingData.getSecondsSinceLastSent() < COOLDOWN_SECONDS) {
             long waitTime = COOLDOWN_SECONDS - existingData.getSecondsSinceLastSent();
             throw new RuntimeException("Please wait " + waitTime + " seconds before requesting a new OTP.");
         }
-
-      
 
         String otp = String.format("%06d", new Random().nextInt(1000000));
         otpStorage.put(email, new OtpData(otp, EXPIRE_MINUTES));
@@ -65,13 +69,15 @@ public class OtpService {
         OtpData data = otpStorage.get(email);
 
         if (data == null || data.isExpired()) {
-            if (data != null) otpStorage.remove(email);
+            if (data != null)
+                otpStorage.remove(email);
             return false;
         }
 
         boolean isValid = data.getOtp().equals(otp);
-        if (isValid) otpStorage.remove(email); 
-        
+        if (isValid)
+            otpStorage.remove(email);
+
         return isValid;
     }
 
@@ -80,7 +86,7 @@ public class OtpService {
         System.out.println("[OtpService] Manually cleared OTP for " + email);
     }
 
-    @Scheduled(fixedRate = 600000) 
+    @Scheduled(fixedRate = 600000)
     public void cleanUpExpiredOtps() {
         otpStorage.entrySet().removeIf(entry -> entry.getValue().isExpired());
     }

@@ -1,7 +1,7 @@
 console.log("bin.js loaded");
 
 async function loadDeleted(type, element) {
-    // Highlight active button
+    
     document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
     if (element) element.classList.add('active');
 

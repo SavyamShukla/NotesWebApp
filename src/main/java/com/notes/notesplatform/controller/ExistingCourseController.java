@@ -30,14 +30,14 @@ public class ExistingCourseController {
     @Autowired
     private NoteRepository noteRepository;
 
-    // -------- PAGE --------
+    
 
     @GetMapping
     public String existingCoursesPage() {
         return "existing-course";
     }
 
-    // -------- COURSE --------
+    
 
     @GetMapping("/all")
     @ResponseBody
@@ -80,7 +80,7 @@ public class ExistingCourseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // -------- CLASS --------
+   
 
     @PostMapping("/soft-delete-class/{id}")
     @ResponseBody
@@ -100,7 +100,7 @@ public class ExistingCourseController {
         return classRepository.findByCourseIdAndDeletedFalse(courseId);
     }
 
-    // -------- SUBJECT --------
+  
 
     @PostMapping("/soft-delete-subject/{id}")
     @ResponseBody
@@ -120,7 +120,7 @@ public class ExistingCourseController {
         return subjectRepository.findByClassEntityIdAndDeletedFalse(classId);
     }
 
-    // -------- CHAPTER --------
+
 
     @PostMapping("/soft-delete-chapter/{id}")
     @ResponseBody
@@ -140,7 +140,6 @@ public class ExistingCourseController {
         return chapterRepository.findBySubjectIdAndDeletedFalse(subjectId);
     }
 
-    // -------- NOTE --------
 
     @PostMapping("/soft-delete-note/{id}")
     @ResponseBody

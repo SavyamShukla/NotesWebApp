@@ -16,10 +16,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    // This "users" cache stores the UserDetails object using email as the key
-    @Cacheable(value = "users", key = "#email") 
+
+    @Cacheable(value = "users", key = "#email")
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // This print statement will now only appear ONCE in our logs per user session
+
         System.out.println("Database hit for user: " + email);
 
         User user = userRepository.findByEmail(email)

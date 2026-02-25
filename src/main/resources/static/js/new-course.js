@@ -172,6 +172,6 @@ function gatherFormDetails() {
 function submitForm() {
     const btn = document.querySelector('#confirmationModal .btn-primary');
     btn.innerHTML = "Uploading... Please Wait";
-    btn.disabled = true; // Prevent double-clicks
+    btn.disabled = true; 
     document.getElementById('courseForm').submit();
 }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-/*
+
 @Controller
 public class NotesPageController {
 
@@ -37,59 +37,14 @@ public class NotesPageController {
 
     @Autowired
     private PurchasedNoteRepository purchasedNoteRepository;
+
+    @Autowired
+    private StorageService storageService;
 
     @GetMapping("/notes")
     public String showNotes(@RequestParam(required = false) Long chapterId,
             Model model,
             Principal principal) {
-
-        List<Note> notes = new ArrayList<>();
-        Map<Long, Boolean> userHasNote = new HashMap<>();
-
-        if (chapterId != null) {
-            notes = noteRepository.findByChapterIdAndDeletedFalse(chapterId);
-
-            if (principal != null) {
-
-                User user = userRepository.findByEmail(principal.getName()).orElse(null);
-
-                for (Note note : notes) {
-                    boolean purchased = purchasedNoteRepository.existsByUserAndNote(user, note);
-                    userHasNote.put(note.getId(), purchased);
-                }
-            }
-        }
-
-        model.addAttribute("notes", notes);
-        model.addAttribute("userHasNote", userHasNote);
-        model.addAttribute("razorpayKey", razorpayKeyId);
-        return "notes";
-    }
-
-}*/
-
-@Controller
-public class NotesPageController {
-
-    @Value("${razorpay.key.id}")
-    private String razorpayKeyId;
-
-    @Autowired
-    private NoteRepository noteRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PurchasedNoteRepository purchasedNoteRepository;
-
-    @Autowired
-    private StorageService storageService; // 1. Inject your StorageService
-
-    @GetMapping("/notes")
-    public String showNotes(@RequestParam(required = false) Long chapterId,
-                            Model model,
-                            Principal principal) {
 
         List<Note> notes = new ArrayList<>();
         Map<Long, Boolean> userHasNote = new HashMap<>();
@@ -102,17 +57,15 @@ public class NotesPageController {
                 User user = userRepository.findByEmail(principal.getName()).orElse(null);
 
                 for (Note note : notes) {
-                    //boolean purchased = purchasedNoteRepository.existsByUserAndNote(user, note);
-                    //userHasNote.put(note.getId(), purchased);
-                    boolean purchased =
-purchasedNoteRepository
-.existsByUserIdAndNoteId(user.getId(), note.getId());
-userHasNote.put(note.getId(), purchased);
-System.out.println("USER ID: " + user.getId()
-    + " NOTE ID: " + note.getId()
-    + " PURCHASED: " + purchased);
 
-                    // 3. Generate Signed URL only if the user has access
+                    boolean purchased = purchasedNoteRepository
+                            .existsByUserIdAndNoteId(user.getId(), note.getId());
+                    userHasNote.put(note.getId(), purchased);
+                    System.out.println("USER ID: " + user.getId()
+                            + " NOTE ID: " + note.getId()
+                            + " PURCHASED: " + purchased);
+
+                    // Generate Signed URL only if the user has access
                     if (note.isFree() || purchased) {
                         String signedUrl = storageService.getSignedUrl(note.getFileUrl());
                         secureUrls.put(note.getId(), signedUrl);

@@ -38,143 +38,81 @@ public class StorageService {
         private String secretKey;
 
         @Value("${supabase.url}")
-private String supabaseBaseUrl;
+        private String supabaseBaseUrl;
 
-@Value("${supabase.service-role-key}")
-private String serviceRoleKey;
+        @Value("${supabase.service-role-key}")
+        private String serviceRoleKey;
 
-       /*  public String uploadFile(MultipartFile file) throws IOException {
+        public String uploadFile(MultipartFile file) throws IOException {
 
-                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+                String filePath = "notes/" + uniqueFileName;
 
                 S3Client s3Client = S3Client.builder()
                                 .endpointOverride(URI.create(endpoint))
                                 .region(Region.of(region))
-                                .credentialsProvider(StaticCredentialsProvider.create(
-                                                AwsBasicCredentials.create(accessKey, secretKey)))
-
-                                .serviceConfiguration(S3Configuration.builder()
-                                                .checksumValidationEnabled(false)
-                                                .build())
+                                .credentialsProvider(
+                                                StaticCredentialsProvider.create(
+                                                                AwsBasicCredentials.create(accessKey, secretKey)))
+                                .serviceConfiguration(
+                                                S3Configuration.builder()
+                                                                .checksumValidationEnabled(false)
+                                                                .build())
                                 .build();
 
                 PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                                 .bucket(bucketName)
-                                .key(fileName)
+                                .key(filePath)
                                 .contentType(file.getContentType())
                                 .build();
 
                 s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
 
-                return fileName;
-        }*/
-       public String uploadFile(MultipartFile file) throws IOException {
-
-    String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
-    // 👇 THIS IS IMPORTANT (Folder Path)
-    String filePath = "notes/" + uniqueFileName;
-
-    S3Client s3Client = S3Client.builder()
-            .endpointOverride(URI.create(endpoint))
-            .region(Region.of(region))
-            .credentialsProvider(
-                    StaticCredentialsProvider.create(
-                            AwsBasicCredentials.create(accessKey, secretKey)))
-            .serviceConfiguration(
-                    S3Configuration.builder()
-                            .checksumValidationEnabled(false)
-                            .build())
-            .build();
-
-    PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-            .bucket(bucketName)
-            .key(filePath)   // ✅ NOW FULL PATH
-            .contentType(file.getContentType())
-            .build();
-
-    s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
-
-    return filePath;  // ✅ RETURN FULL PATH
-}
-
-     /*   public String getSignedUrl(String fileName) {
-    // 1. Define the Supabase Signing Endpoint
-    String endpoint = supabaseBaseUrl + "/storage/v1/object/sign/" + bucketName + "/" + fileName;
-
-    RestTemplate restTemplate = new RestTemplate();
-
-    // 2. Set the Security Headers using the Service Role Key
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", "Bearer " + serviceRoleKey);
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    // 3. Set how long the link lasts (e.g., 15 minutes)
-    Map<String, Object> body = Map.of("expiresIn", 900);
-    HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-
-    try {
-        // 4. Request the Signed URL
-        ResponseEntity<Map> response = restTemplate.postForEntity(endpoint, request, Map.class);
-        
-        if (response.getStatusCode() == HttpStatus.OK) {
-            String signedPath = (String) response.getBody().get("signedURL");
-            // 5. Combine with the base URL to get the full "Security Link"
-            return supabaseBaseUrl + signedPath;
-        }
-    } catch (Exception e) {
-        System.err.println("Error generating signed URL: " + e.getMessage());
-    }
-    return null;
-}*/
-
-
-public String getSignedUrl(String filePath) {
-
-    String endpoint = supabaseBaseUrl
-            + "/storage/v1/object/sign/"
-            + bucketName + "/"
-            + filePath;
-
-    RestTemplate restTemplate = new RestTemplate();
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", "Bearer " + serviceRoleKey);
-    headers.set("Content-Type", "application/json");
-
-    // ✅ VERY IMPORTANT UPDATED BODY
-    String requestBody = """
-    {
-        "expiresIn": 900,
-        "transform": {}
-    }
-    """;
-
-    HttpEntity<String> request =
-            new HttpEntity<>(requestBody, headers);
-
-    try {
-
-        ResponseEntity<Map> response =
-                restTemplate.postForEntity(
-                        endpoint,
-                        request,
-                        Map.class
-                );
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-
-            String signedPath =
-                    (String) response.getBody().get("signedURL");
-
-            return supabaseBaseUrl + "/storage/v1" + signedPath;
+                return filePath;
         }
 
-    } catch (Exception e) {
-        System.out.println("SIGNED URL ERROR: "
-                + e.getMessage());
-    }
+        public String getSignedUrl(String filePath) {
 
-    return null;
-}
+                String endpoint = supabaseBaseUrl
+                                + "/storage/v1/object/sign/"
+                                + bucketName + "/"
+                                + filePath;
+
+                RestTemplate restTemplate = new RestTemplate();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Authorization", "Bearer " + serviceRoleKey);
+                headers.set("Content-Type", "application/json");
+
+                String requestBody = """
+                                {
+                                    "expiresIn": 900,
+                                    "transform": {}
+                                }
+                                """;
+
+                HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+                try {
+
+                        ResponseEntity<Map> response = restTemplate.postForEntity(
+                                        endpoint,
+                                        request,
+                                        Map.class);
+
+                        if (response.getStatusCode().is2xxSuccessful()) {
+
+                                String signedPath = (String) response.getBody().get("signedURL");
+
+                                return supabaseBaseUrl + "/storage/v1" + signedPath;
+                        }
+
+                } catch (Exception e) {
+                        System.out.println("SIGNED URL ERROR: "
+                                        + e.getMessage());
+                }
+
+                return null;
+        }
 }

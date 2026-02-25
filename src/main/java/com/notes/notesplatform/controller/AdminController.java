@@ -43,14 +43,7 @@ public class AdminController {
     @Autowired
     private StorageService storageService;
 
-    //@GetMapping("/users")
-    //public  ShowUserList(){
-      //  List<User> allUsers= userRepository.findAll();
-       // return allUsers;
-    //}
-
-    
-    // New course page
+   
     @GetMapping("/new-course")
     public String showNewCourseForm(Model model) {
         model.addAttribute("course", new Course());

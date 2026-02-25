@@ -3,7 +3,7 @@ let allCourses = [];
 async function fetchCourses() {
     try {
         const res = await fetch('/existing-courses/all');
-       allCourses = await res.json();
+        allCourses = await res.json();
         displayCourses(allCourses);
     } catch (err) {
         console.error('Error loading courses:', err);
@@ -104,15 +104,15 @@ function renderEntities(container, course) {
 
 async function toggleSubEntities(type, id, btn) {
     const containerId = type === 'class' ? `subjects-${id}` :
-                        type === 'subject' ? `chapters-${id}` :
-                        `notes-${id}`;
+        type === 'subject' ? `chapters-${id}` :
+            `notes-${id}`;
     const container = document.getElementById(containerId);
 
     if (container.innerHTML !== '') {
         container.innerHTML = '';
         btn.textContent = type === 'class' ? '+ Subjects' :
-                          type === 'subject' ? '+ Chapters' :
-                          '+ Notes';
+            type === 'subject' ? '+ Chapters' :
+                '+ Notes';
         return;
     }
 
@@ -177,7 +177,7 @@ async function toggleSubEntities(type, id, btn) {
     }
 }
 
-// ---- Add functions ----
+
 async function addSubject(classId) {
     const name = prompt("Enter new subject name:");
     if (!name) return;
@@ -248,18 +248,18 @@ async function saveCourse(id) {
 async function deleteCourse(id) {
     if (confirm("Are you sure you want to delete this course?")) {
         await fetch(`/existing-courses/soft-delete-course/${id}`, { method: 'POST' });
-        // remove from frontend immediately
+
         allCourses = allCourses.filter(c => c.id !== id);
         displayCourses(allCourses);
         document.getElementById('editSection').innerHTML = 'Select a course to edit';
     }
-}    
+}
 
 
 
 
 function viewNote(fileUrl) {
-    const fullUrl = `/uploads/${fileUrl}`;  // path where your PDFs are stored
+    const fullUrl = `/uploads/${fileUrl}`;
     window.open(fullUrl, '_blank');
 }
 
@@ -267,7 +267,7 @@ function viewNote(fileUrl) {
 
 
 
- async function editNote(id, fileUrl, price, isFree) {
+async function editNote(id, fileUrl, price, isFree) {
     const newFileUrl = prompt("Enter new file URL:", fileUrl);
     if (newFileUrl === null) return;
 
@@ -294,7 +294,7 @@ function viewNote(fileUrl) {
         console.error("Error updating note:", err);
         alert("Failed to update note.");
     }
-}   
+}
 
 
 async function addClass(courseId) {
@@ -305,7 +305,7 @@ async function addClass(courseId) {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `courseId=${courseId}&className=${encodeURIComponent(className)}`
         });
-        fetchCourses(); // Refresh list
+        fetchCourses();
     }
 }
 
@@ -316,7 +316,7 @@ async function addClass(courseId) {
 async function deleteEntity(type, id) {
     if (confirm(`Delete this ${type}?`)) {
         await fetch(`/existing-courses/soft-delete-${type}/${id}`, { method: 'POST' });
-        // refresh list
+
         fetchCourses();
     }
 }
